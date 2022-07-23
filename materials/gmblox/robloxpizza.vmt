@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\robloxpizza
+	$model "1"
+	$vertexcolor "1"
+}

@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\bloxy
+	$model "1"
+	$vertexcolor "1"
+}

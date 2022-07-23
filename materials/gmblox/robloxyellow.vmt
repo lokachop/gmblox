@@ -1,0 +1,8 @@
+// needed because garry IS STUPID
+VertexLitGeneric
+{
+	$basetexture gmblox\robloxwhite
+	$model "1"
+	$vertexcolor "1"
+	$color2 "{255 255 0}"
+}
