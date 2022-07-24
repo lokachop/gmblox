@@ -1,5 +1,40 @@
 include("shared.lua")
 
+local function col2num(r, g, b)
+	return r + bit.lshift(g, 8) + bit.lshift(b, 16)
+end
+
+local function num2col(num)
+	return Color(bit.band(num, 0xFF), bit.band(bit.rshift(num, 8), 0xFF), bit.band(bit.rshift(num, 16), 0xFF))
+end
+
+net.Receive("gmblox_changecolour_sv",  function()
+	local target = net.ReadEntity()
+
+	local colhead = num2col(net.ReadUInt(24))
+	local colbody = num2col(net.ReadUInt(24))
+
+	local coleftarm = num2col(net.ReadUInt(24))
+	local colrightarm = num2col(net.ReadUInt(24))
+
+	local colleftleg = num2col(net.ReadUInt(24))
+	local colrightleg = num2col(net.ReadUInt(24))
+
+	local ro = target.RenderObjects
+
+	ro["head"].col = colhead
+	ro["torso"].col = colbody
+
+	ro["leftleg"].col = colleftleg
+	ro["rightleg"].col = colrightleg
+
+	ro["leftarm"].col = coleftarm
+	ro["rightarm"].col = colrightarm
+
+	target:BuildCSModels()
+end)
+
+
 function ENT:RemoveCSModels()
 	for k, v in pairs(self.CSModels) do
 		v:Remove()
@@ -44,6 +79,40 @@ function ENT:BuildCSModels()
 	end
 end
 
+function ENT:SendSavedColour()
+	local scolstr = cookie.GetString("gmblox_col")
+
+	if not scolstr then
+		return
+	end
+
+	local coltbl = util.JSONToTable(scolstr)
+	if not coltbl then
+		return
+	end
+
+	local colhead = coltbl.head
+	local coltorso = coltbl.torso
+	local coleftarm = coltbl.leftarm
+	local colrightarm = coltbl.rightarm
+	local colleftleg = coltbl.leftleg
+	local colrightleg = coltbl.rightleg
+
+	if not colhead or not coltorso or not coleftarm or not colrightarm or not colleftleg or not colrightleg then
+		return
+	end
+
+	net.Start("gmblox_changecolour")
+		net.WriteEntity(self)
+		net.WriteUInt(colhead, 24)
+		net.WriteUInt(coltorso, 24)
+		net.WriteUInt(coleftarm, 24)
+		net.WriteUInt(colrightarm, 24)
+		net.WriteUInt(colleftleg, 24)
+		net.WriteUInt(colrightleg, 24)
+	net.SendToServer()
+end
+
 
 function ENT:Initialize()
 	self.CSModels = {}
@@ -59,6 +128,7 @@ function ENT:Initialize()
 			model = "models/gmblox/head.mdl",
 			mat = "gmblox/face_background",
 			col = Color(255, 255, 0),
+			name = "head"
 		},
 		["torso"] = {
 			pos = Vector(0, 0, 0),
@@ -66,6 +136,7 @@ function ENT:Initialize()
 			model = "models/gmblox/torso.mdl",
 			mat = "gmblox/robloxwhite",
 			col = HSVToColor(self:GetRandomColour(), 0.5, 1),
+			name = "torso"
 		},
 
 		["leftarm"] = {
@@ -74,6 +145,7 @@ function ENT:Initialize()
 			model = "models/gmblox/limbarm.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(255, 255, 0),
+			name = "leftarm"
 		},
 		["rightarm"] = {
 			pos = Vector(-6, 18, 0),
@@ -81,6 +153,7 @@ function ENT:Initialize()
 			model = "models/gmblox/limbarm.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(255, 255, 0),
+			name = "rightarm"
 		},
 
 		["leftleg"] = {
@@ -89,6 +162,7 @@ function ENT:Initialize()
 			model = "models/gmblox/limb.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(75, 220, 75),
+			name = "leftleg"
 		},
 		["rightleg"] = {
 			pos = Vector(12, -6, 0),
@@ -96,6 +170,7 @@ function ENT:Initialize()
 			model = "models/gmblox/limb.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(75, 220, 75),
+			name = "rightleg"
 		},
 	}
 
@@ -224,8 +299,7 @@ function ENT:Animate(k)
 		return
 	end
 
-	local diff = targetPitch.ang - currPitch
-	local diffclamp = math.Clamp(diff, -RealFrameTime() * targetPitch.speed, RealFrameTime() * targetPitch.speed)
+	local diffclamp = math.Clamp(targetPitch.ang - currPitch, -RealFrameTime() * targetPitch.speed, RealFrameTime() * targetPitch.speed)
 
 	self.CurrentPitches[k] = self.CurrentPitches[k] + diffclamp
 
@@ -368,7 +442,7 @@ function ENT:ReBuildGearButtons()
 			w = 64,
 			h = 64
 		}
-		self.ActiveButtons[k] = button
+		self.ActiveButtons[v] = button
 	end
 end
 
@@ -551,6 +625,197 @@ function ENT:MakeHooks()
 	end)
 end
 
+function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
+	local buttonpart = vgui.Create("DButton", self.customizeMenu)
+	buttonpart:SetPos(x, y)
+	buttonpart:SetSize(w, h)
+	buttonpart:SetText("")
+
+	local e_ref = self
+	function buttonpart:Paint(w2, h2)
+		local opt = e_ref.colEditTarget == cref.name and 0 or 255
+		surface.SetDrawColor(255, opt, opt)
+		surface.DrawRect(0, 0, w2, h2)
+
+		surface.SetDrawColor(cref.col.r, cref.col.g, cref.col.b)
+		surface.DrawRect(2, 2, w2 - 4, h2 - 4)
+	end
+
+
+	function buttonpart:DoClick()
+		e_ref.colEditTarget = cref.name
+		colmixer:SetColor(cref.col)
+	end
+end
+
+function ENT:MakeCustomizeMenu()
+	if IsValid(self.customizeMenu) then
+		return
+	end
+	local e_ref = self
+
+	self.customizeMenu = vgui.Create("DFrame")
+	self.customizeMenu:SetSize(800, 600)
+	self.customizeMenu:Center()
+	self.customizeMenu:SetTitle("GMBlox Customization")
+	self.customizeMenu:SetDraggable(false)
+	self.customizeMenu:MakePopup()
+
+	self.colEditTarget = "head"
+
+	self.NoClickZones["cusmenu"] = {
+		x = self.customizeMenu:GetX(),
+		y = self.customizeMenu:GetY(),
+		w = self.customizeMenu:GetWide(),
+		h = self.customizeMenu:GetTall(),
+	}
+
+
+	local colMixer = vgui.Create("DColorMixer", self.customizeMenu)
+	colMixer:SetPos(800 - 400, 600 / 2 - 150)
+	colMixer:SetSize(400, 300)
+	colMixer:SetColor(e_ref.RenderObjects[e_ref.colEditTarget].col)
+
+	function colMixer:ValueChanged(newcol)
+		if not IsValid(e_ref) then
+			return
+		end
+		if not e_ref.colEditTarget then
+			return
+		end
+
+		if not e_ref.RenderObjects[e_ref.colEditTarget] then
+			return
+		end
+
+		e_ref.RenderObjects[e_ref.colEditTarget].col = Color(newcol.r, newcol.g, newcol.b)
+	end
+
+	local offx = 50
+	local offy = 0
+	self:BodyPartButton(offx + 100, offy + 50, 100, 100, self.RenderObjects["head"], colMixer)
+	self:BodyPartButton(offx + 75, offy + 150, 150, 200, self.RenderObjects["torso"], colMixer)
+
+	self:BodyPartButton(offx + 0, offy + 150, 75, 200, self.RenderObjects["leftarm"], colMixer)
+	self:BodyPartButton(offx + 75 + 150, offy + 150, 75, 200, self.RenderObjects["rightarm"], colMixer)
+
+	self:BodyPartButton(offx + 75, offy + 350, 75, 200, self.RenderObjects["leftleg"], colMixer)
+	self:BodyPartButton(offx + 75 + 75, offy + 350, 75, 200, self.RenderObjects["rightleg"], colMixer)
+
+	function self.customizeMenu:OnClose()
+		local chead = e_ref.RenderObjects["head"].col
+		local ctorso = e_ref.RenderObjects["torso"].col
+
+		local cleftarm = e_ref.RenderObjects["leftarm"].col
+		local crightarm = e_ref.RenderObjects["rightarm"].col
+
+		local cleftleg = e_ref.RenderObjects["leftleg"].col
+		local crightleg = e_ref.RenderObjects["rightleg"].col
+
+		local coltbl = {
+			head = col2num(chead.r, chead.g, chead.b),
+			torso = col2num(ctorso.r, ctorso.g, ctorso.b),
+
+			leftarm = col2num(cleftarm.r, cleftarm.g, cleftarm.b),
+			rightarm = col2num(crightarm.r, crightarm.g, crightarm.b),
+
+			leftleg = col2num(cleftleg.r, cleftleg.g, cleftleg.b),
+			rightleg = col2num(crightleg.r, crightleg.g, crightleg.b),
+		}
+
+		cookie.Set("gmblox_col", util.TableToJSON(coltbl))
+		e_ref:SendSavedColour()
+
+		e_ref.NoClickZones["cusmenu"] = nil
+	end
+end
+
+function ENT:MakeMenu()
+	if IsValid(self.frameMenu) then
+		return
+	end
+
+	local e_ref = self
+
+	self.frameMenu = vgui.Create("DFrame")
+	self.frameMenu:SetSize(800 * .25, 600 * .5)
+	self.frameMenu:Center()
+	self.frameMenu:SetTitle("GMBlox")
+	self.frameMenu:MakePopup()
+	self.frameMenu:SetDraggable(false)
+
+	self.NoClickZones["menu"] = {
+		x = self.frameMenu:GetX(),
+		y = self.frameMenu:GetY(),
+		w = self.frameMenu:GetWide(),
+		h = self.frameMenu:GetTall(),
+	}
+
+	local exitButton = vgui.Create("DButton", self.frameMenu)
+	exitButton:SetText("Exit")
+	exitButton:DockMargin(16, 16, 16, 16)
+	exitButton:Dock(BOTTOM)
+	exitButton:SetTall(64)
+
+	function exitButton:DoClick()
+		e_ref.frameMenu:Close()
+		net.Start("gmblox_exit")
+			net.WriteEntity(e_ref)
+		net.SendToServer()
+	end
+
+	local customizeButton = vgui.Create("DButton", self.frameMenu)
+	customizeButton:SetText("Customize")
+	customizeButton:DockMargin(16, 16, 16, 16)
+	customizeButton:Dock(BOTTOM)
+	customizeButton:SetTall(64)
+
+	function customizeButton:DoClick()
+		e_ref.frameMenu:Close()
+		e_ref:MakeCustomizeMenu()
+	end
+
+	function self.frameMenu:OnClose()
+		e_ref.NoClickZones["menu"] = nil
+	end
+end
+
+function ENT:MakeMenuButton()
+	local buttonMn = vgui.Create("DButton")
+	self.ActiveButtons["menu"] = buttonMn
+	buttonMn:SetSize(60, 51)
+	buttonMn:SetPos(0, ScrH() - 51)
+	buttonMn:SetText("")
+	buttonMn.hovered = false
+
+
+	local t_buttonMn = Material("gmblox/vgui/SettingsButton.png", "nocull ignorez")
+	local t_buttonMn_h = Material("gmblox/vgui/SettingsButton_dn.png", "nocull ignorez")
+	function buttonMn:Paint(w, h)
+		surface.SetDrawColor(255, 255, 255)
+		surface.SetMaterial(buttonMn.hovered and t_buttonMn_h or t_buttonMn)
+		surface.DrawTexturedRect(0, 0, w, h)
+	end
+
+	function buttonMn:OnCursorEntered()
+		self.hovered = true
+	end
+
+	function buttonMn:OnCursorExited()
+		self.hovered = false
+	end
+
+	local e_ref = self
+	function buttonMn:DoClick()
+		if not IsValid(e_ref) then
+			return
+		end
+		e_ref:MakeMenu()
+	end
+end
+
+
+
 
 
 function ENT:CallGearOnEquip()
@@ -583,6 +848,8 @@ function ENT:Think()
 		self.MadeHooks = true
 		self:MakeHooks()
 		self:ReBuildGearButtons()
+		self:SendSavedColour()
+		self:MakeMenuButton()
 	end
 
 	if self.LastActiveGear ~= self:GetActiveGear() then
@@ -604,19 +871,35 @@ function ENT:Think()
 	self:GearThink()
 end
 
+
+function ENT:RemoveHooks()
+	hook.Remove("CalcView", "GMBloxControl")
+	hook.Remove("HUDPaint", "GMBloxPaintHealth")
+	hook.Remove("CreateMove", "GMBloxZoom")
+
+	for k, v in pairs(self.ActiveButtons) do
+		v:Remove()
+	end
+
+	gui.EnableScreenClicker(false)
+	self.MadeHooks = false
+end
+
+net.Receive("gmblox_exit_sv", function()
+	local e_ref = net.ReadEntity()
+	if not IsValid(e_ref) then
+		return
+	end
+
+	e_ref:RemoveHooks()
+end)
+
+
 function ENT:OnRemove()
 	self:RemoveCSModels()
 
 	if self.MadeHooks then
-		hook.Remove("CalcView", "GMBloxControl")
-		hook.Remove("HUDPaint", "GMBloxPaintHealth")
-		hook.Remove("CreateMove", "GMBloxZoom")
-
-		for k, v in pairs(self.ActiveButtons) do
-			v:Remove()
-		end
-
-		gui.EnableScreenClicker(false)
+		self:RemoveHooks()
 	end
 end
 

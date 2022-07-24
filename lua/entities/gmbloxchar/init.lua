@@ -11,6 +11,135 @@ util.AddNetworkString("gmblox_equipgear")
 util.AddNetworkString("gmblox_firegear")
 util.AddNetworkString("gmblox_changezoom")
 
+util.AddNetworkString("gmblox_changecolour")
+util.AddNetworkString("gmblox_changecolour_sv")
+
+util.AddNetworkString("gmblox_exit")
+util.AddNetworkString("gmblox_exit_sv")
+
+function ENT:UnControl()
+	if not IsValid(self:GetController()) then
+		return
+	end
+
+	self:GetController():UnSpectate()
+	self:GetController():AllowFlashlight(true)
+
+	local found = false
+	if IsValid(self:GetController()) then
+		self:GetController():Spawn()
+
+
+		-- find a safe spot to spawn at
+		-- this allows players to clip through thin walls, although you can do the same with chairs
+		for i = 1, 32 do
+			local pos = self:GetPos() + Vector(math.random(-64, 64), math.random(-64, 64), 0)
+
+
+			local tr = util.TraceHull({
+				start = pos,
+				endpos = pos,
+				mins = Vector(-16, -16, 0),
+				maxs = Vector(16, 16, 71)
+			})
+
+			if not tr.Hit then
+				self:GetController():SetPos(pos)
+				found = true
+				break
+			end
+		end
+
+		-- no spot found, PANIC!
+		if not found then
+			self:GetController():SetPos(self:GetPos())
+		end
+	end
+
+	self:SetController(nil)
+end
+
+
+net.Receive("gmblox_exit", function(len, ply)
+	if (ply.nextExitGMBlox or 0) > CurTime() then
+		return
+	end
+
+	ply.nextExitGMBlox = CurTime() + 1
+
+	local target = net.ReadEntity()
+
+	if not IsValid(target) then
+		return
+	end
+
+	if target:GetClass() ~= "gmbloxchar" then
+		return
+	end
+
+	if not IsValid(target:GetController()) then
+		return
+	end
+
+	if target:GetController() ~= ply then
+		return
+	end
+
+	target:UnControl()
+
+	net.Start("gmblox_exit_sv")
+		net.WriteEntity(target)
+	net.Send(ply)
+end)
+
+net.Receive("gmblox_changecolour", function(len, ply)
+	if (ply.NextChangeColour or 0) > CurTime() then
+		return
+	end
+
+	ply.NextChangeColour = CurTime() + 1
+
+	local target = net.ReadEntity()
+
+	if not IsValid(target) then
+		return
+	end
+
+	if target:GetClass() ~= "gmbloxchar" then
+		return
+	end
+
+	if not IsValid(target:GetController()) then
+		return
+	end
+
+	if target:GetController() ~= ply then
+		return
+	end
+
+	local colhead = net.ReadUInt(24)
+	local coltorso = net.ReadUInt(24)
+	local colleftarm = net.ReadUInt(24)
+	local colrightarm = net.ReadUInt(24)
+	local colleftleg = net.ReadUInt(24)
+	local colrightleg = net.ReadUInt(24)
+
+	if not colhead or not coltorso or not colleftarm or not colrightarm or not colleftleg or not colrightleg then
+		return
+	end
+
+	net.Start("gmblox_changecolour_sv")
+		net.WriteEntity(target)
+		net.WriteUInt(colhead, 24)
+		net.WriteUInt(coltorso, 24)
+		net.WriteUInt(colleftarm, 24)
+		net.WriteUInt(colrightarm, 24)
+		net.WriteUInt(colleftleg, 24)
+		net.WriteUInt(colrightleg, 24)
+	net.Broadcast()
+end)
+
+
 net.Receive("gmblox_equipgear", function(len, ply)
 	if (ply.NextGearChange or 0) > CurTime() then
 		return
@@ -33,6 +162,10 @@ net.Receive("gmblox_equipgear", function(len, ply)
 	end
 
 	if target:GetClass() ~= "gmbloxchar" then
+		return
+	end
+
+	if not IsValid(target:GetController()) then
 		return
 	end
 
@@ -89,6 +222,10 @@ net.Receive("gmblox_firegear", function(len, ply)
 		return
 	end
 
+	if not IsValid(target:GetController()) then
+		return
+	end
+
 	if target:GetController() ~= ply then
 		return
 	end
@@ -139,7 +276,8 @@ net.Receive("gmblox_firegear", function(len, ply)
 	target.NextFires[gear] = CurTime() + gearData.useCooldown
 end)
 
-
+-- no ratelimit!
+-- people change zoom VERY fast
 net.Receive("gmblox_changezoom", function(len, ply)
 	local target = net.ReadEntity()
 	if not IsValid(target) then
@@ -147,6 +285,10 @@ net.Receive("gmblox_changezoom", function(len, ply)
 	end
 
 	if target:GetClass() ~= "gmbloxchar" then
+		return
+	end
+
+	if not IsValid(target:GetController()) then
 		return
 	end
 
@@ -364,12 +506,12 @@ function ENT:PlayerHandleMovement()
 	local airVel = self:GetVelocity()
 	airVel.z = 0
 
-	local vmul = self:GetGrounded() and 120 or 4
+	local vmul = self:GetGrounded() and 120 or 12
 	phys:ApplyForceCenter(totalVel * vmul)
 
 
 	if self.HasJumped and self:GetGrounded() then
-		self.NextJump = CurTime() + 0.25
+		self.NextJump = CurTime() + 0.15
 		self.HasJumped = false
 	end
 
@@ -481,12 +623,7 @@ function ENT:Use(ply, caller)
 end
 
 function ENT:OnRemove()
-	if IsValid(self:GetController()) then
-		self:GetController():UnSpectate()
-		self:GetController():AllowFlashlight(true)
-		self:GetController():Spawn()
-	end
-
+	self:UnControl()
 	self:StopSound("gmblox/bfsl-minifigfoots1.wav")
 end
 
