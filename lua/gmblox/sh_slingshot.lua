@@ -3,9 +3,9 @@ GEAR.name = "slingshot" -- name of the gear
 GEAR.desc = "shoot these slings" -- optional
 GEAR.icon = "gmblox/vgui/Slingshot.png" -- optional
 
-GEAR.model = "models/weapons/w_suitcase_passenger.mdl"
-GEAR.modelOffset = Vector(0, 0, 4)
-GEAR.angleOffset = Angle(0, 0, 0)
+GEAR.model = "models/gmblox/slingshot.mdl"
+GEAR.modelOffset = Vector(-8, 0, 2)
+GEAR.angleOffset = Angle(90, 0, 90)
 
 GEAR.material = "" -- material to paint the worldmodel, can be empty
 GEAR.useCooldown = 0.45 -- wait this many seconds before using again
@@ -30,6 +30,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 	slingshotBall_phys:SetMass(1)
 	slingshotBall_phys:Wake()
 	slingshotBall_phys:ApplyForceCenter(shootdir * -512 * 2)
+	slingshotBall_phys:ApplyForceCenter(Vector(0, 0, math.Clamp(shootpos:Distance(hitpos), 0, 512)))
 
 	slingshotBall:AddCallback("PhysicsCollide", function(enthit, data)
 		if not IsValid(slingshotBall) then

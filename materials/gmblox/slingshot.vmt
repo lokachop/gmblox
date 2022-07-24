@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\slingshot
+	$model "1"
+	$vertexcolor "1"
+}

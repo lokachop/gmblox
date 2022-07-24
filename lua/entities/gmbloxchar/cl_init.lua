@@ -180,6 +180,8 @@ function ENT:Initialize()
 		"paintball",
 		"bloxycola",
 		"pizza",
+		"sword",
+		"cheezburger"
 	}
 
 	self.ZmMult = 0.5
@@ -441,6 +443,87 @@ function ENT:HandleQuickSwitch()
 end
 
 
+function ENT:GearThink()
+	local gear = self:GetActiveGear()
+	if not gear then
+		return
+	end
+
+	local gearData = GMBlox.ValidGears[gear]
+	if not gearData or not gearData.clThinkCallback then
+		return
+	end
+
+	local fine, err = pcall(gearData.clThinkCallback, self)
+
+	if not fine then
+		print("[GMBLOX] Error in gear think callback for " .. gear .. ": " .. err)
+	end
+end
+
+
+function ENT:MakeHooks()
+	hook.Add("CalcView", "GMBloxControl", function(ply, origin, ang)
+		local tr = util.TraceLine({
+			start = self:GetPos() + Vector(0, 0, 16),
+			endpos = (self:GetPos() - (ang:Forward() * 100) * self.ZmMult) + self:GetForward() * -22,
+			filter = self
+		})
+
+		local view = {
+			origin = tr.HitPos + (tr.HitNormal * 2),
+			angles = ang,
+			fov = fov,
+			drawviewer = true
+		}
+
+		return view
+	end)
+
+	local hp_bar_empty = Material("gmblox/vgui/healthbar-empty.png", "nocull ignorez alphatest")
+	local hp_bar_full = Material("gmblox/vgui/healthbar-alone.png", "nocull ignorez alphatest")
+	local hp_bar_overlay = Material("gmblox/vgui/health-overlay.png", "nocull ignorez alphatest")
+	hook.Add("HUDPaint", "GMBloxPaintHealth", function()
+		if not IsValid(self) then
+			return
+		end
+
+		surface.SetDrawColor(255, 255, 255)
+		surface.SetMaterial(hp_bar_empty)
+		surface.DrawTexturedRect((ScrW() / 2) - (170 / 2), ScrH() * .975, 170, 18)
+
+		local sz = self:GetHealthRoblox() / 100
+
+		surface.SetMaterial(hp_bar_full)
+		surface.DrawTexturedRectUV((ScrW() / 2) - (170 / 2), ScrH() * .975, 170 * sz, 18, 0, 0, sz, 1)
+
+		surface.SetMaterial(hp_bar_overlay)
+		surface.DrawTexturedRect((ScrW() / 2) - (170 / 2), ScrH() * .975, 170, 18)
+	end)
+
+	hook.Add("CreateMove", "GMBloxZoom", function(cmd)
+		if not IsValid(self) then
+			return
+		end
+
+		if cmd:GetMouseWheel() ~= 0 then
+			self.ZmMult = self.ZmMult - cmd:GetMouseWheel() * 0.025
+			if self.ZmMult < 0 then
+				self.ZmMult = 0
+			end
+			if self.ZmMult > 4 then
+				self.ZmMult = 4
+			end
+
+			net.Start("gmblox_changezoom")
+				net.WriteEntity(self)
+				net.WriteFloat(self.ZmMult)
+			net.SendToServer()
+		end
+	end)
+end
+
+
 function ENT:Think()
 	for k, v in pairs(self.CSModels) do
 		self:AnimThink(k)
@@ -449,67 +532,7 @@ function ENT:Think()
 
 	if IsValid(self:GetController()) and self:GetController() == LocalPlayer() and not self.MadeHooks then
 		self.MadeHooks = true
-		hook.Add("CalcView", "GMBloxControl", function(ply, origin, ang)
-			local tr = util.TraceLine({
-				start = self:GetPos() + Vector(0, 0, 16),
-				endpos = (self:GetPos() - (ang:Forward() * 100) * self.ZmMult) + self:GetForward() * -22,
-				filter = self
-			})
-
-			local view = {
-				origin = tr.HitPos + (tr.HitNormal * 2),
-				angles = ang,
-				fov = fov,
-				drawviewer = true
-			}
-
-			return view
-		end)
-
-		local hp_bar_empty = Material("gmblox/vgui/healthbar-empty.png", "nocull ignorez alphatest")
-		local hp_bar_full = Material("gmblox/vgui/healthbar-alone.png", "nocull ignorez alphatest")
-		local hp_bar_overlay = Material("gmblox/vgui/health-overlay.png", "nocull ignorez alphatest")
-		hook.Add("HUDPaint", "GMBloxPaintHealth", function()
-			if not IsValid(self) then
-				return
-			end
-
-			surface.SetDrawColor(255, 255, 255)
-			surface.SetMaterial(hp_bar_empty)
-			surface.DrawTexturedRect((ScrW() / 2) - (170 / 2), ScrH() * .975, 170, 18)
-
-			local sz = self:GetHealthRoblox() / 100
-
-			surface.SetMaterial(hp_bar_full)
-			surface.DrawTexturedRectUV((ScrW() / 2) - (170 / 2), ScrH() * .975, 170 * sz, 18, 0, 0, sz, 1)
-
-			surface.SetMaterial(hp_bar_overlay)
-			surface.DrawTexturedRect((ScrW() / 2) - (170 / 2), ScrH() * .975, 170, 18)
-		end)
-
-		hook.Add("CreateMove", "GMBloxZoom", function(cmd)
-			if not IsValid(self) then
-				return
-			end
-
-			if cmd:GetMouseWheel() ~= 0 then
-				self.ZmMult = self.ZmMult - cmd:GetMouseWheel() * 0.025
-				if self.ZmMult < 0 then
-					self.ZmMult = 0
-				end
-				if self.ZmMult > 4 then
-					self.ZmMult = 4
-				end
-
-				net.Start("gmblox_changezoom")
-					net.WriteEntity(self)
-					net.WriteFloat(self.ZmMult)
-				net.SendToServer()
-			end
-		end)
-
-
-
+		self:MakeHooks()
 		self:ReBuildGearButtons()
 	end
 
@@ -528,6 +551,7 @@ function ENT:Think()
 
 	self:HandleQuickSwitch()
 	self:HandleFiring()
+	self:GearThink()
 end
 
 function ENT:OnRemove()

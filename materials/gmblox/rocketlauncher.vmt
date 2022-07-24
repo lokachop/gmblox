@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\rocketlauncher
+	$model "1"
+	$vertexcolor "1"
+}

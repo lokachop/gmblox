@@ -45,6 +45,11 @@ net.Receive("gmblox_equipgear", function(len, ply)
 		return
 	end
 
+	local currgear = target:GetActiveGear()
+	if currgear and GMBlox.ValidGears[currgear] and GMBlox.ValidGears[currgear].svUnequip then
+		pcall(GMBlox.ValidGears[currgear].svUnequip, target)
+	end
+
 	if gear == target:GetActiveGear() then
 		target:SetActiveGear("")
 		return
@@ -419,6 +424,24 @@ function ENT:DieIfNeeded()
 end
 
 
+function ENT:ThinkGear()
+	local gear = self:GetActiveGear()
+	if not gear then
+		return
+	end
+
+	local gearData = GMBlox.ValidGears[gear]
+
+	if not gearData or not gearData.svThinkCallback then
+		return
+	end
+
+	local fine, err = pcall(gearData.svThinkCallback, self)
+	if not fine then
+		print("[GMBlox] Error in svThinkCallback for gear " .. gear .. ": " .. err)
+	end
+end
+
 
 function ENT:Think()
 	self:FallOverCheck()
@@ -428,6 +451,7 @@ function ENT:Think()
 
 	self:DieIfNeeded()
 	self:PlayerHandleMovement()
+	self:ThinkGear()
 
 	self:NextThink(CurTime() + 0.025)
 	return true

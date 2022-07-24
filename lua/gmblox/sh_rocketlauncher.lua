@@ -3,9 +3,9 @@ GEAR.name = "rocketlauncher" -- name of the gear
 GEAR.desc = "A rocketlauncher" -- optional
 GEAR.icon = "gmblox/vgui/Rocket.png" -- optional
 
-GEAR.model = "models/weapons/w_rocket_launcher.mdl"
-GEAR.modelOffset = Vector(-4, 0, 12)
-GEAR.angleOffset = Angle(90, 0, 180)
+GEAR.model = "models/gmblox/rocketlauncher.mdl"
+GEAR.modelOffset = Vector(-7.5, 0, -5)
+GEAR.angleOffset = Angle(180, 0, 90)
 
 GEAR.material = "" -- material to paint the worldmodel, can be empty
 GEAR.useCooldown = 4 -- wait this many seconds before using again
@@ -36,8 +36,9 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 		rocketProp:Remove()
 		return
 	end
+	rocketPhys:SetMass(500)
 	rocketPhys:EnableGravity(false)
-	rocketPhys:ApplyForceCenter(-shootdir * 1280)
+	rocketPhys:ApplyForceCenter(-shootdir * (1280 * 100))
 	rocketPhys:SetDragCoefficient(0)
 	rocketPhys:SetBuoyancyRatio(0)
 

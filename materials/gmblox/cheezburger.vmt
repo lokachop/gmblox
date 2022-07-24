@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\cheezburger
+	$model "1"
+	$vertexcolor "1"
+}

@@ -13,7 +13,7 @@ GEAR.equipSound = "gmblox/bloxy_equip.wav" -- optional
 
 -- tr is a screentrace
 GEAR.clCallback = function(ent, tr)
-	ent.gearExtraOffset = Vector(-4, 17.5, -8)
+	ent.gearExtraOffset = Vector(-4, 18.25, -8)
 	ent.gearExtraAngle = Angle(-45, 0, 0)
 
 	ent:RebuildActiveGear()
