@@ -3,9 +3,9 @@ GEAR.name = "paintball" -- name of the gear
 GEAR.desc = "paintballing" -- optional
 GEAR.icon = "gmblox/vgui/PaintballIcon.png" -- optional
 
-GEAR.model = "models/weapons/w_crossbow.mdl"
-GEAR.modelOffset = Vector(-4, 2, -2)
-GEAR.angleOffset = Angle(90, 0, 0)
+GEAR.model = "models/gmblox/paintball_gun.mdl"
+GEAR.modelOffset = Vector(-7, 2, 6)
+GEAR.angleOffset = Angle(90, 0, -90)
 
 GEAR.material = "" -- material to paint the worldmodel, can be empty
 GEAR.useCooldown = 0.75 -- wait this many seconds before using again

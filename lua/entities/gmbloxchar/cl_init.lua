@@ -180,7 +180,6 @@ function ENT:Initialize()
 		"paintball",
 		"bloxycola",
 		"pizza",
-		"sword",
 		"cheezburger"
 	}
 
@@ -244,6 +243,21 @@ function ENT:Animate(k)
 end
 
 function ENT:AnimThink(k)
+	local gear = self:GetActiveGear()
+	local geardata = GMBlox.ValidGears[gear]
+
+	if geardata and geardata.animOverrideLUT[k] ~= nil and self.AllowAnimOverride then
+		local fine, ret, rate = pcall(geardata.animOverrideLUT[k], self, k)
+		if not fine then
+			print("[GMBLOX] Error in anim LUT for " .. k .. ": " .. ret)
+			return
+		end
+
+		self.TargetPitches[k] = {ang = ret, speed = rate or self.TargetPitches[k].speed}
+		return
+	end
+
+
 	if self.AnimLUT[k] then
 		local fine, ret, rate = pcall(self.AnimLUT[k], self, k)
 		if not fine then
@@ -266,6 +280,28 @@ function ENT:Draw()
 		v:CreateShadow()
 	end
 end
+
+function ENT:EquipGear(name)
+	local currGear = self:GetActiveGear()
+	local currGearData = GMBlox.ValidGears[currGear]
+	if currGearData and currGearData.clUnequip then
+		local fine, err = pcall(currGearData.clUnequip, self)
+		if not fine then
+			print("[GMBLOX] Error in clUnequip for " .. currGear .. ": " .. err)
+		end
+	end
+
+
+	net.Start("gmblox_equipgear")
+		net.WriteString(name)
+		net.WriteEntity(self)
+	net.SendToServer()
+
+	self.gearExtraOffset = Vector(0, 0, 0)
+	self.gearExtraAngle = Angle(0, 0, 0)
+	self:RebuildActiveGear()
+end
+
 
 
 function ENT:ReBuildGearButtons()
@@ -318,13 +354,11 @@ function ENT:ReBuildGearButtons()
 		end
 
 		function button:DoClick()
-			net.Start("gmblox_equipgear")
-				net.WriteString(v)
-				net.WriteEntity(e_self)
-			net.SendToServer()
+			e_self:EquipGear(v)
 
 			e_self.gearExtraOffset = Vector(0, 0, 0)
 			e_self.gearExtraAngle = Angle(0, 0, 0)
+			e_self:RebuildActiveGear()
 		end
 
 
@@ -426,13 +460,7 @@ function ENT:HandleQuickSwitch()
 		end
 
 		if self.Inventory[idx] and isDown and not self.HasSwitched then
-			net.Start("gmblox_equipgear")
-				net.WriteString(self.Inventory[idx])
-				net.WriteEntity(self)
-			net.SendToServer()
-
-			self.gearExtraOffset = Vector(0, 0, 0)
-			self.gearExtraAngle = Angle(0, 0, 0)
+			self:EquipGear(self.Inventory[idx])
 			self.HasSwitched = true
 		end
 	end
@@ -524,6 +552,27 @@ function ENT:MakeHooks()
 end
 
 
+
+function ENT:CallGearOnEquip()
+	local gear = self:GetActiveGear()
+	if not gear then
+		return
+	end
+
+	local gearData = GMBlox.ValidGears[gear]
+
+	if not gearData or not gearData.clEquip then
+		return
+	end
+
+	local fine, err = pcall(gearData.clEquip, self)
+
+	if not fine then
+		print("[GMBLOX] Error in equip callback for " .. gear .. ": " .. err)
+	end
+end
+
+
 function ENT:Think()
 	for k, v in pairs(self.CSModels) do
 		self:AnimThink(k)
@@ -539,6 +588,7 @@ function ENT:Think()
 	if self.LastActiveGear ~= self:GetActiveGear() then
 		self.LastActiveGear = self:GetActiveGear()
 		self:RebuildActiveGear()
+		self:CallGearOnEquip()
 	end
 
 	if LocalPlayer() == self:GetController() then

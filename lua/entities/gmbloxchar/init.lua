@@ -60,6 +60,13 @@ net.Receive("gmblox_equipgear", function(len, ply)
 	if gearData.equipSound then
 		ply:EmitSound(gearData.equipSound)
 	end
+
+	if gearData.svEquip then
+		local fine, err = pcall(gearData.svEquip, target)
+		if not fine then
+			print("Error in gear \"" .. gear .. "\" equip: " .. err)
+		end
+	end
 end)
 
 

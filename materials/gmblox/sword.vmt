@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\sword
+	$model "1"
+	$vertexcolor "1"
+}

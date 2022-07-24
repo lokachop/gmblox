@@ -30,7 +30,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 	slingshotBall_phys:SetMass(1)
 	slingshotBall_phys:Wake()
 	slingshotBall_phys:ApplyForceCenter(shootdir * -512 * 2)
-	slingshotBall_phys:ApplyForceCenter(Vector(0, 0, math.Clamp(shootpos:Distance(hitpos), 0, 512)))
+	slingshotBall_phys:ApplyForceCenter(Vector(0, 0, math.Clamp(shootpos:Distance(hitpos) * .55, 0, 512)))
 
 	slingshotBall:AddCallback("PhysicsCollide", function(enthit, data)
 		if not IsValid(slingshotBall) then

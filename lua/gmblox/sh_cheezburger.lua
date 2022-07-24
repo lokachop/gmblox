@@ -3,17 +3,17 @@ GEAR.name = "cheezburger" -- name of the gear
 GEAR.desc = "may i have a cheezburger please" -- optional
 GEAR.icon = "gmblox/vgui/cheezburger_icon.png" -- optional
 
-GEAR.model = "models/gmblox/models/gmblox/cheezburger.mdl"
-GEAR.modelOffset = Vector(-2, 0, 7)
-GEAR.angleOffset = Angle(90, 0, 0)
+GEAR.model = "models/gmblox/cheezburger.mdl"
+GEAR.modelOffset = Vector(3, 0, 4)
+GEAR.angleOffset = Angle(90, 0, 180)
 
 GEAR.material = "" -- material to paint the worldmodel, can be empty
-GEAR.useCooldown = 1.5 -- wait this many seconds before using again
+GEAR.useCooldown = 1 -- wait this many seconds before using again
 GEAR.equipSound = "gmblox/cheezburger_equip.wav" -- optional
 
 -- tr is a screentrace
 GEAR.clCallback = function(ent, tr)
-	ent.gearExtraOffset = Vector(-6, 18.25, -12)
+	ent.gearExtraOffset = Vector(-8, 18.25, -8)
 	ent.gearExtraAngle = Angle(0, 0, 180)
 
 	ent:RebuildActiveGear()
