@@ -32,11 +32,13 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 	end
 	bounceBall_phys:Wake()
 	bounceBall_phys:ApplyForceCenter(shootdir * -1024)
-	print("hey")
-
 
 	bounceBall:AddCallback("PhysicsCollide", function(enthit, data)
 		if not IsValid(bounceBall) then
+			return
+		end
+
+		if (bounceBall.NextHit or 0) > CurTime() then
 			return
 		end
 
@@ -48,6 +50,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 
 		if data.HitEntity:GetClass() == "gmbloxchar" and data.HitSpeed:Length() > 60 then
 			data.HitEntity:TakeDamage(40)
+			bounceBall.NextHit = CurTime() + 0.3
 		end
 	end)
 

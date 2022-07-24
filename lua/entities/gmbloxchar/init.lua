@@ -403,7 +403,7 @@ end
 
 
 function ENT:DieIfNeeded()
-	if self:GetHealthRoblox() <= 0 and not self.HasFallen then
+	if (self:GetHealthRoblox() <= 0 and not self.HasFallen) or (IsValid(self:GetController()) and self:GetController():Health() <= 0 and not self.HasFallen) then
 		self.HasFallen = true
 		self:EmitSound("gmblox/Died.wav")
 		self:SetStanding(false)
