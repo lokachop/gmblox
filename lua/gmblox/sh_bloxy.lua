@@ -4,7 +4,7 @@ GEAR.desc = "bloxyyyy" -- optional
 GEAR.icon = "gmblox/vgui/bloxy.png" -- optional
 
 GEAR.model = "models/gmblox/bloxy.mdl"
-GEAR.modelOffset = Vector(-2, 0, 4)
+GEAR.modelOffset = Vector(-0.15, 0, 4)
 GEAR.angleOffset = Angle(90, 0, 180)
 
 GEAR.material = "" -- material to paint the worldmodel, can be empty
@@ -13,7 +13,7 @@ GEAR.equipSound = "gmblox/bloxy_equip.wav" -- optional
 
 -- tr is a screentrace
 GEAR.clCallback = function(ent, tr)
-	ent.gearExtraOffset = Vector(-4, 18.25, -8)
+	ent.gearExtraOffset = Vector(-6, 18.25, -8)
 	ent.gearExtraAngle = Angle(-45, 0, 0)
 
 	ent:RebuildActiveGear()

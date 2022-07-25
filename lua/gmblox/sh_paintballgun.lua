@@ -25,9 +25,14 @@ local function makePaintGibs(col, pos)
 		pGib:SetPos(pos)
 		pGib:Spawn()
 
-		if IsValid(pGib:GetPhysicsObject()) then
-			pGib:GetPhysicsObject():ApplyForceCenter(VectorRand(-100, 100))
+		local pGibPhys = pGib:GetPhysicsObject()
+		if IsValid(pGibPhys) then
+			pGibPhys:ApplyForceCenter(VectorRand(-100, 100))
+			pGibPhys:SetMass(1)
 		end
+
+		pGib:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+
 
 		timer.Simple(2, function()
 			if not IsValid(pGib) then
@@ -70,12 +75,19 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 
 		local hent = data.HitEntity
 
-		if CPPI and IsValid(hent) and not hent:CPPICanTool() then
-			return
-		end
-
 		if IsValid(hent) and hent:GetClass() == "gmbloxchar" and data.HitSpeed:Length() > 60 then
 			hent:TakeDamage(20)
+
+			local hphys = hent:GetPhysicsObject()
+
+			if IsValid(hphys) then
+				hphys:SetVelocityInstantaneous(data.TheirOldVelocity)
+				hphys:SetAngleVelocityInstantaneous(data.TheirOldAngularVelocity)
+			end
+		end
+
+		if CPPI and IsValid(hent) and not hent:CPPICanTool() then
+			return
 		end
 
 		if IsValid(hent) and hent:GetClass() == "prop_physics" then
@@ -86,6 +98,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 			makePaintGibs(paintBall.HSVCol, paintBall:GetPos())
 			paintBall.HasGibbed = true
 		end
+
 		paintBall:Remove()
 	end)
 

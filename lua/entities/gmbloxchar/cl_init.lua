@@ -350,8 +350,11 @@ function ENT:Draw()
 			break
 		end
 
-		--v:DrawModel()
 		v:CreateShadow()
+	end
+
+	if IsValid(self.GearCSModel) then
+		self.GearCSModel:CreateShadow()
 	end
 end
 
@@ -625,6 +628,10 @@ function ENT:MakeHooks()
 	end)
 end
 
+
+
+
+local face_texture = Material("gmblox/vgui/smile-background.png", "nocull ignorez alphatest")
 function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 	local buttonpart = vgui.Create("DButton", self.customizeMenu)
 	buttonpart:SetPos(x, y)
@@ -638,7 +645,13 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 		surface.DrawRect(0, 0, w2, h2)
 
 		surface.SetDrawColor(cref.col.r, cref.col.g, cref.col.b)
-		surface.DrawRect(2, 2, w2 - 4, h2 - 4)
+
+		if cref.name == "head" then
+			surface.SetMaterial(face_texture)
+			surface.DrawTexturedRect(2, 2, w2 - 4, h2 - 4)
+		else
+			surface.DrawRect(2, 2, w2 - 4, h2 - 4)
+		end
 	end
 
 
@@ -647,6 +660,8 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 		colmixer:SetColor(cref.col)
 	end
 end
+
+
 
 function ENT:MakeCustomizeMenu()
 	if IsValid(self.customizeMenu) then
@@ -788,6 +803,13 @@ function ENT:MakeMenuButton()
 	buttonMn:SetText("")
 	buttonMn.hovered = false
 
+	self.NoClickZones["menubtton"] = {
+		x = buttonMn:GetX(),
+		y = buttonMn:GetY(),
+		w = buttonMn:GetWide(),
+		h = buttonMn:GetTall(),
+	}
+
 
 	local t_buttonMn = Material("gmblox/vgui/SettingsButton.png", "nocull ignorez")
 	local t_buttonMn_h = Material("gmblox/vgui/SettingsButton_dn.png", "nocull ignorez")
@@ -864,6 +886,10 @@ function ENT:Think()
 		elseif self.ZmMult > 0 then
 			gui.EnableScreenClicker(true)
 		end
+	end
+
+	if not IsValid(self:GetController()) then
+		self.NoClickZones = {}
 	end
 
 	self:HandleQuickSwitch()
