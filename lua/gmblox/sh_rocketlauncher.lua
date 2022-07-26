@@ -38,7 +38,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 	end
 	rocketPhys:SetMass(500)
 	rocketPhys:EnableGravity(false)
-	rocketPhys:ApplyForceCenter(-shootdir * (1280 * 100))
+	rocketPhys:ApplyForceCenter(-shootdir * (1280 * 200))
 	rocketPhys:SetDragCoefficient(0)
 	rocketPhys:SetBuoyancyRatio(0)
 

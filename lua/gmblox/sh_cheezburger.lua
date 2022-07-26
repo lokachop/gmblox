@@ -13,23 +13,27 @@ GEAR.equipSound = "gmblox/cheezburger_equip.wav" -- optional
 
 -- tr is a screentrace
 GEAR.clCallback = function(ent, tr)
-	ent.gearExtraOffset = Vector(-8, 18.25, -8)
-	ent.gearExtraAngle = Angle(0, 0, 180)
-
 	ent:RebuildActiveGear()
 	-- do stuff
 end
 
 GEAR.clFinishedCallback = function(ent)
-	ent.gearExtraOffset = Vector(0, 0, 0)
-	ent.gearExtraAngle = Angle(0, 0, 0)
-
 	ent:RebuildActiveGear()
 	-- do stuff
 end
 
 GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
+	ent:SetGearOffset(Vector(-8, 18.25, -8))
+	ent:SetGearAngle(Angle(0, 0, 180))
+
 	ent:EmitSound("gmblox/cheezburger_eat.wav")
+end
+
+GEAR.svFinishedCallback = function(ent)
+	ent:SetGearOffset(Vector(0, 0, 0))
+	ent:SetGearAngle(Angle(0, 0, 0))
+
+	ent:EmitSound("gmblox/cheezburger_finish.wav")
 end
 
 GMBlox.DeclareGear(GEAR)

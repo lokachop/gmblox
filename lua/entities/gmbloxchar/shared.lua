@@ -16,4 +16,7 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Int", 1, "RandomColour")
 	self:NetworkVar("Entity", 0, "Controller")
 	self:NetworkVar("String", 0, "ActiveGear")
+
+	self:NetworkVar("Vector", 0, "GearOffset")
+	self:NetworkVar("Angle", 0, "GearAngle")
 end

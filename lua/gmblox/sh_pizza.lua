@@ -13,23 +13,25 @@ GEAR.equipSound = "gmblox/pizza_equip.wav" -- optional
 
 -- tr is a screentrace
 GEAR.clCallback = function(ent, tr)
-	ent.gearExtraOffset = Vector(-6, 18.25, -12)
-	ent.gearExtraAngle = Angle(0, 0, 180)
-
 	ent:RebuildActiveGear()
 	-- do stuff
 end
 
 GEAR.clFinishedCallback = function(ent)
-	ent.gearExtraOffset = Vector(0, 0, 0)
-	ent.gearExtraAngle = Angle(0, 0, 0)
-
 	ent:RebuildActiveGear()
 	-- do stuff
 end
 
 GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
+	ent:SetGearOffset(Vector(-6, 18.25, -12))
+	ent:SetGearAngle(Angle(0, 0, 180))
+
 	ent:EmitSound("gmblox/pizza_eat.wav")
+end
+
+GEAR.svFinishedCallback = function(ent)
+	ent:SetGearOffset(Vector(0, 0, 0))
+	ent:SetGearAngle(Angle(0, 0, 0))
 end
 
 GMBlox.DeclareGear(GEAR)

@@ -75,14 +75,17 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 
 		local hent = data.HitEntity
 
-		if IsValid(hent) and hent:GetClass() == "gmbloxchar" and data.HitSpeed:Length() > 60 then
-			hent:TakeDamage(20)
+		if IsValid(hent) and data.HitSpeed:Length() > 60 then
+			if IsValid(ent) then
+				hent:TakeDamage(20, ent:GetController())
+			end
 
-			local hphys = hent:GetPhysicsObject()
-
-			if IsValid(hphys) then
-				hphys:SetVelocityInstantaneous(data.TheirOldVelocity)
-				hphys:SetAngleVelocityInstantaneous(data.TheirOldAngularVelocity)
+			if hent:GetClass() == "gmbloxchar" then
+				local hphys = hent:GetPhysicsObject()
+				if IsValid(hphys) then
+					hphys:SetVelocityInstantaneous(data.TheirOldVelocity)
+					hphys:SetAngleVelocityInstantaneous(data.TheirOldAngularVelocity)
+				end
 			end
 		end
 

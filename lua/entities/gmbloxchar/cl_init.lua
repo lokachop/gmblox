@@ -1,5 +1,23 @@
 include("shared.lua")
 
+surface.CreateFont("GMBlox_Trebuchet18Bold", {
+	font = "Trebuchet MS",
+	size = 18,
+	weight = 800,
+	antialias = false,
+	additive = false,
+})
+
+surface.CreateFont("GMBlox_Trebuchet18", {
+	font = "Trebuchet MS",
+	size = 18,
+	weight = 600,
+	antialias = false,
+	additive = false,
+})
+
+
+
 local function col2num(r, g, b)
 	return r + bit.lshift(g, 8) + bit.lshift(b, 16)
 end
@@ -77,6 +95,8 @@ function ENT:BuildCSModels()
 
 		self:OffsetAndParentCSModel(self.CSModels[k], v.pos, v.ang)
 	end
+
+	self:RebuildActiveGear()
 end
 
 function ENT:SendSavedColour()
@@ -183,7 +203,7 @@ function ENT:Initialize()
 			return -180, 512
 		end
 
-		if not ent:GetGrounded() then
+		if not ent:GetGrounded() or (self.LowerArmTime > CurTime()) then
 			return -270, 1024
 		end
 		local evel = ent:GetVelocity()
@@ -196,7 +216,7 @@ function ENT:Initialize()
 	end
 
 	self.AnimLUT["rightarm"] = function(ent, k)
-		if not ent:GetGrounded() then
+		if not ent:GetGrounded() or (self.LowerArmTime > CurTime())  then
 			return -270, 1024
 		end
 
@@ -245,8 +265,10 @@ function ENT:Initialize()
 	self.LastActiveGear = ""
 	self.NextFires = {}
 	self.NoClickZones = {}
-	self.gearExtraOffset = Vector(0, 0, 0)
-	self.gearExtraAngle = Angle(0, 0, 0)
+	self.LastGearOffset = Vector(0, 0, 0)
+	self.LastGearAngle = Angle(0, 0, 0)
+	self.LastGroundState = false
+	self.LowerArmTime = 0
 
 	self.Inventory = {
 		"rocketlauncher",
@@ -275,8 +297,8 @@ function ENT:RebuildActiveGear()
 
 	local gearData = GMBlox.ValidGears[gear]
 	local mdl = gearData.model
-	local offpos = gearData.modelOffset + Vector(-6, -18, 16) + self.gearExtraOffset
-	local offang = gearData.angleOffset + self.gearExtraAngle
+	local offpos = gearData.modelOffset + Vector(-6, -18, 16) + self:GetGearOffset()
+	local offang = gearData.angleOffset + self:GetGearAngle()
 	local offmat = gearData.material
 
 	self.GearCSModel = ClientsideModel(mdl, RENDERGROUP_OPAQUE)
@@ -374,8 +396,6 @@ function ENT:EquipGear(name)
 		net.WriteEntity(self)
 	net.SendToServer()
 
-	self.gearExtraOffset = Vector(0, 0, 0)
-	self.gearExtraAngle = Angle(0, 0, 0)
 	self:RebuildActiveGear()
 end
 
@@ -432,9 +452,6 @@ function ENT:ReBuildGearButtons()
 
 		function button:DoClick()
 			e_self:EquipGear(v)
-
-			e_self.gearExtraOffset = Vector(0, 0, 0)
-			e_self.gearExtraAngle = Angle(0, 0, 0)
 			e_self:RebuildActiveGear()
 		end
 
@@ -554,6 +571,14 @@ function ENT:GearThink()
 		return
 	end
 
+	if self.LastGearOffset ~= self:GetGearOffset() or self.LastGearAngle ~= self:GetGearAngle() then
+		self.LastGearOffset = self:GetGearOffset()
+		self.LastGearAngle = self:GetGearAngle()
+
+		self:RebuildActiveGear()
+	end
+
+
 	local gearData = GMBlox.ValidGears[gear]
 	if not gearData or not gearData.clThinkCallback then
 		return
@@ -563,6 +588,70 @@ function ENT:GearThink()
 
 	if not fine then
 		print("[GMBLOX] Error in gear think callback for " .. gear .. ": " .. err)
+	end
+end
+
+function ENT:RenderScoreboard()
+	if not GetConVar("gmblox_drawscoreboard") then
+		return
+	end
+
+	if not GetConVar("gmblox_drawscoreboard"):GetBool() then
+		return
+	end
+
+
+	surface.SetDrawColor(0, 0, 0, 128)
+
+	local sw = ScrW() * .2
+	local sh = 32
+	surface.DrawRect(ScrW() - sw * 1.05, sh * 0.95, sw, sh)
+
+	draw.SimpleText("Kills", "DermaLarge", ScrW() - sw * .4, sh * .95, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+	draw.SimpleText("Deaths", "DermaLarge", ScrW() - sw * .1, sh * .95, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+
+	local curr_y = sh + sh * 0.95
+	for k, v in pairs(team.GetAllTeams()) do
+		surface.SetDrawColor(v.Color.r, v.Color.g, v.Color.b, 96)
+		surface.DrawRect(ScrW() - sw * 1.05, curr_y, sw, 24)
+
+		local bar_y = curr_y
+		draw.SimpleText(v.Name, "GMBlox_Trebuchet18", ScrW() - sw * 1.05, curr_y + 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+		curr_y = curr_y + 24
+
+		local plys = team.GetPlayers(k)
+		local hasPly = false
+		local teamFrags = 0
+		local teamDeaths = 0
+		for k2, v2 in pairs(plys) do
+			local grmod = k2 % 2 == 0 and 96 or 0
+			surface.SetDrawColor(grmod, grmod, grmod, 128)
+			surface.DrawRect(ScrW() - sw * 1.05, curr_y, sw, 24)
+
+			draw.SimpleText(v2:GetName(), "GMBlox_Trebuchet18", ScrW() - sw * 1.05, curr_y + 2, Color(v.Color.r, v.Color.g, v.Color.b), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+
+			local kills = v2:Frags()
+			teamFrags = teamFrags + kills
+			draw.SimpleText(kills, "GMBlox_Trebuchet18", ScrW() - sw * .475, curr_y + 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+			local deaths = v2:Deaths()
+			teamDeaths = teamDeaths + deaths
+			draw.SimpleText(deaths, "GMBlox_Trebuchet18", ScrW() - sw * .2, curr_y + 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+
+			hasPly = true
+			curr_y = curr_y + 24
+		end
+
+
+		draw.SimpleText(teamFrags, "GMBlox_Trebuchet18Bold", ScrW() - sw * .475, bar_y + 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		draw.SimpleText(teamDeaths, "GMBlox_Trebuchet18Bold", ScrW() - sw * .2, bar_y + 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+		if not hasPly then
+			surface.SetDrawColor(0, 0, 0, 128)
+			surface.DrawRect(ScrW() - sw * 1.05, curr_y, sw, 24)
+			curr_y = curr_y + 24
+		end
 	end
 end
 
@@ -604,6 +693,8 @@ function ENT:MakeHooks()
 
 		surface.SetMaterial(hp_bar_overlay)
 		surface.DrawTexturedRect((ScrW() / 2) - (170 / 2), ScrH() * .975, 170, 18)
+
+		self:RenderScoreboard()
 	end)
 
 	hook.Add("CreateMove", "GMBloxZoom", function(cmd)
@@ -718,6 +809,10 @@ function ENT:MakeCustomizeMenu()
 	self:BodyPartButton(offx + 75 + 75, offy + 350, 75, 200, self.RenderObjects["rightleg"], colMixer)
 
 	function self.customizeMenu:OnClose()
+		if not IsValid(e_ref) then
+			return
+		end
+
 		local chead = e_ref.RenderObjects["head"].col
 		local ctorso = e_ref.RenderObjects["torso"].col
 
@@ -745,6 +840,96 @@ function ENT:MakeCustomizeMenu()
 	end
 end
 
+local crCount = 0
+local function makeCreditAndReason(parent, name, reason, link)
+	crCount = crCount + 1
+
+	local panelBase = vgui.Create(link and "DButton" or "DPanel", parent)
+
+	panelBase.bcol = crCount % 2 == 0 and Color(148, 148, 148) or Color(128, 128, 128)
+	panelBase.hcol = crCount % 2 == 0 and Color(148, 148, 188) or Color(128, 128, 168)
+
+	function panelBase:Paint(w, h)
+		local ccalc = (self.hovered or false) and self.hcol or self.bcol
+
+		surface.SetDrawColor(ccalc)
+		surface.DrawRect(0, 0, w, h)
+	end
+	panelBase:Dock(TOP)
+
+	if link then
+		panelBase:SetText("")
+		function panelBase:DoClick()
+			gui.OpenURL(link)
+		end
+
+		function panelBase:OnCursorEntered()
+			self.hovered = true
+			self:SetCursor("hand")
+		end
+
+		function panelBase:OnCursorExited()
+			self.hovered = false
+			self:SetCursor("arrow")
+		end
+	end
+
+	local dm = 4
+	local textName = vgui.Create("DLabel", panelBase)
+	textName:SetText(name)
+	textName:SetTextColor(Color(255, 255, 255))
+	textName:SizeToContents()
+	textName:DockMargin(dm, 0, dm, 0)
+	textName:Dock(LEFT)
+
+	local textReason = vgui.Create("DLabel", panelBase)
+	textReason:SetText(reason)
+	textReason:SetTextColor(Color(255, 255, 255))
+	textReason:SizeToContents()
+	textReason:DockMargin(dm, 0, dm, 0)
+	textReason:Dock(RIGHT)
+
+	return panelBase
+end
+
+
+function ENT:MakeCreditsMenu()
+	if IsValid(self.creditsMenu) then
+		return
+	end
+
+	self.creditsMenu = vgui.Create("DFrame")
+	self.creditsMenu:SetSize(800 * .35, 600 * .5)
+	self.creditsMenu:Center()
+	self.creditsMenu:SetTitle("GMBlox Credits")
+	self.creditsMenu:SetDraggable(false)
+	self.creditsMenu:MakePopup()
+
+	self.NoClickZones["credits"] = {
+		x = self.creditsMenu:GetX(),
+		y = self.creditsMenu:GetY(),
+		w = self.creditsMenu:GetWide(),
+		h = self.creditsMenu:GetTall(),
+	}
+
+	makeCreditAndReason(self.creditsMenu, "opiper", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198885421847/")
+	makeCreditAndReason(self.creditsMenu, "sweepy", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198277636412")
+	makeCreditAndReason(self.creditsMenu, "Swedish Swede", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198260232820")
+	makeCreditAndReason(self.creditsMenu, "Lord_Arcness", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198118355002")
+	makeCreditAndReason(self.creditsMenu, "ROBLOX", "Original Game", "https://www.roblox.com/")
+	makeCreditAndReason(self.creditsMenu, "GMPublisher", "Used for publishing to the workshop", "https://github.com/WilliamVenner/gmpublisher")
+
+	-- and most importantly
+	makeCreditAndReason(self.creditsMenu, LocalPlayer():GetName(), "Downloading and using the addon", "https://steamcommunity.com/profiles/" .. LocalPlayer():SteamID64())
+
+
+	local e_ref = self
+	function self.creditsMenu:OnClose()
+		e_ref.NoClickZones["credits"] = nil
+	end
+
+end
+
 function ENT:MakeMenu()
 	if IsValid(self.frameMenu) then
 		return
@@ -766,9 +951,10 @@ function ENT:MakeMenu()
 		h = self.frameMenu:GetTall(),
 	}
 
+	local dm = 12
 	local exitButton = vgui.Create("DButton", self.frameMenu)
 	exitButton:SetText("Exit")
-	exitButton:DockMargin(16, 16, 16, 16)
+	exitButton:DockMargin(dm, dm, dm, dm)
 	exitButton:Dock(BOTTOM)
 	exitButton:SetTall(64)
 
@@ -781,7 +967,7 @@ function ENT:MakeMenu()
 
 	local customizeButton = vgui.Create("DButton", self.frameMenu)
 	customizeButton:SetText("Customize")
-	customizeButton:DockMargin(16, 16, 16, 16)
+	customizeButton:DockMargin(dm, dm, dm, dm)
 	customizeButton:Dock(BOTTOM)
 	customizeButton:SetTall(64)
 
@@ -789,6 +975,19 @@ function ENT:MakeMenu()
 		e_ref.frameMenu:Close()
 		e_ref:MakeCustomizeMenu()
 	end
+
+
+	local creditsButton = vgui.Create("DButton", self.frameMenu)
+	creditsButton:SetText("Credits")
+	creditsButton:DockMargin(dm, dm, dm, dm)
+	creditsButton:Dock(BOTTOM)
+	creditsButton:SetTall(64)
+
+	function creditsButton:DoClick()
+		e_ref.frameMenu:Close()
+		e_ref:MakeCreditsMenu()
+	end
+
 
 	function self.frameMenu:OnClose()
 		e_ref.NoClickZones["menu"] = nil
@@ -861,6 +1060,14 @@ end
 
 
 function ENT:Think()
+	if self.LastGroundState ~= self:GetGrounded() then
+		if self:GetGrounded() == true then
+			self.LowerArmTime = CurTime() + 0.75
+		end
+		self.LastGroundState = self:GetGrounded()
+	end
+
+
 	for k, v in pairs(self.CSModels) do
 		self:AnimThink(k)
 		self:Animate(k)

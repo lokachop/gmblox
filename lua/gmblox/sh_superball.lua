@@ -48,8 +48,12 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 			return
 		end
 
-		if data.HitEntity:GetClass() == "gmbloxchar" and data.HitSpeed:Length() > 60 then
-			data.HitEntity:TakeDamage(40)
+		if data.HitSpeed:Length() > 60 then
+			if not IsValid(ent) then
+				return
+			end
+
+			data.HitEntity:TakeDamage(40, ent:GetController())
 			bounceBall.NextHit = CurTime() + 0.3
 		end
 	end)

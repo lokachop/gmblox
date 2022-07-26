@@ -188,6 +188,9 @@ net.Receive("gmblox_equipgear", function(len, ply)
 		return
 	end
 
+	target:SetGearOffset(Vector(0, 0, 0))
+	target:SetGearAngle(Angle(0, 0, 0))
+
 	target:SetActiveGear(gear)
 
 	if gearData.equipSound then
@@ -272,6 +275,13 @@ net.Receive("gmblox_firegear", function(len, ply)
 	if ret then
 		return
 	end
+
+	timer.Simple(gearData.useCooldown, function()
+		local fine2, err = pcall(gearData.svFinishedCallback, target)
+		if not fine2 then
+			print("[GMBlox] Error in callback for gear \"" .. gear .. "\": " .. err)
+		end
+	end)
 
 	target.NextFires[gear] = CurTime() + gearData.useCooldown
 end)

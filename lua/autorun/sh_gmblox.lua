@@ -20,6 +20,7 @@ function GMBlox.DeclareGear(tbl)
     tbl.clCallback = tbl.clCallback or function() end
     tbl.svCallback = tbl.svCallback or function() end
     tbl.clFinishedCallback = tbl.clFinishedCallback or function() end
+    tbl.svFinishedCallback = tbl.svFinishedCallback or function() end
     tbl.animOverrideLUT = tbl.animOverrideLUT or {}
 
     tbl.equipSound = tbl.equipSound or ""
