@@ -324,6 +324,7 @@ function ENT:Initialize()
 	if IsValid(phys) then
 		phys:Wake()
 		phys:SetDragCoefficient(0)
+		phys:SetMass(500)
 	end
 
 	self:SetStanding(true)
@@ -413,8 +414,8 @@ function ENT:Stand()
 
 	-- now we need to actually stand
 	local suspLen = 38.5
-	local suspDamp = 6
-	local suspStr = 450
+	local suspDamp = 1024
+	local suspStr = 80400
 
 	local tr = util.TraceLine({
 		start = self:GetPos(),
@@ -430,6 +431,7 @@ function ENT:Stand()
 
 	local invdist = math.abs(tr.Fraction - 1) * (suspLen / 5)
 	local force = suspStr * invdist + (suspDamp * (-self:GetVelocity().z))
+
 	phys:ApplyForceCenter(Vector(0, 0, force / 2))
 
 	-- lets slow down now
@@ -516,8 +518,8 @@ function ENT:PlayerHandleMovement()
 	local airVel = self:GetVelocity()
 	airVel.z = 0
 
-	local vmul = self:GetGrounded() and 120 or 12
-	phys:ApplyForceCenter(totalVel * vmul)
+	local vcalc = totalVel * 120
+	phys:SetVelocity(Vector(vcalc.x, vcalc.y, phys:GetVelocity().z))
 
 
 	if self.HasJumped and self:GetGrounded() then
@@ -538,7 +540,7 @@ function ENT:PlayerHandleMovement()
 		end
 
 
-		phys:ApplyForceCenter(Vector(0, 0, 900))
+		phys:ApplyForceCenter(Vector(0, 0, 110000))
 		self.NextJump = CurTime() + 0.25
 		self.HasJumped = true
 		self:EmitSound("gmblox/jump.wav")
