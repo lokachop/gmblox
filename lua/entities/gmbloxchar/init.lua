@@ -413,7 +413,7 @@ function ENT:Stand()
 	phys:AddAngleVelocity(-phys:GetAngleVelocity() / 2)
 
 	-- now we need to actually stand
-	local suspLen = 38.5
+	local suspLen = 36.5
 	local suspDamp = 1024
 	local suspStr = 80400
 
