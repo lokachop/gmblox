@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\colonthreebackground
+	$model "1"
+	$vertexcolor "1"
+}

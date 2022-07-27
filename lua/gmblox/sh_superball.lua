@@ -30,8 +30,9 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 		bounceBall:Remove()
 		return
 	end
+	bounceBall_phys:SetMass(250)
 	bounceBall_phys:Wake()
-	bounceBall_phys:ApplyForceCenter(shootdir * -1024)
+	bounceBall_phys:ApplyForceCenter(shootdir * (-1024 * 350))
 
 	bounceBall:AddCallback("PhysicsCollide", function(enthit, data)
 		if not IsValid(bounceBall) then

@@ -39,6 +39,9 @@ net.Receive("gmblox_changecolour_sv",  function()
 	local colrightleg = num2col(net.ReadUInt(24))
 
 	local ro = target.RenderObjects
+	if not ro then
+		return
+	end
 
 	ro["head"].col = colhead
 	ro["torso"].col = colbody
@@ -48,6 +51,28 @@ net.Receive("gmblox_changecolour_sv",  function()
 
 	ro["leftarm"].col = coleftarm
 	ro["rightarm"].col = colrightarm
+
+	target:BuildCSModels()
+end)
+
+net.Receive("gmblox_changehat_sv", function()
+	local target = net.ReadEntity()
+
+	local hat = net.ReadString()
+	local face = net.ReadString()
+
+	target.ActiveFace = face
+
+	local ro = target.RenderObjects
+	if not ro then
+		return
+	end
+
+	if not target.Faces[face] then
+		return
+	end
+
+	ro["head"].mat = target.Faces[face].mat
 
 	target:BuildCSModels()
 end)
@@ -99,7 +124,7 @@ function ENT:BuildCSModels()
 	self:RebuildActiveGear()
 end
 
-function ENT:SendSavedColour()
+function ENT:SendSavedAppearance()
 	local scolstr = cookie.GetString("gmblox_col")
 
 	if not scolstr then
@@ -131,6 +156,25 @@ function ENT:SendSavedColour()
 		net.WriteUInt(colleftleg, 24)
 		net.WriteUInt(colrightleg, 24)
 	net.SendToServer()
+
+
+
+	local sprop = cookie.GetString("gmblox_prop")
+	if not sprop then
+		return
+	end
+
+	local prop = util.JSONToTable(sprop)
+
+	if not prop then
+		return
+	end
+
+	net.Start("gmblox_changehat")
+		net.WriteEntity(self)
+		net.WriteString(prop.hat)
+		net.WriteString(prop.face)
+	net.SendToServer()
 end
 
 
@@ -139,6 +183,24 @@ function ENT:Initialize()
 	self.TargetPitches = {}
 	self.CurrentPitches = {}
 
+	self.Faces = {
+		["normal"] = {
+			name = "Smile",
+			mat = "gmblox/face_background",
+			matui = "gmblox/vgui/smile-background.png",
+		},
+		["colonthree"] = {
+			name = ":3",
+			mat = "gmblox/colonthreebackground",
+			matui = "gmblox/vgui/colonthree-background.png",
+		}
+	}
+
+
+	self.Hats = {}
+
+	self.ActiveHat = nil
+	self.ActiveFace = "normal"
 
 	-- i use materials because colours break for some reason
 	self.RenderObjects = {
@@ -146,7 +208,7 @@ function ENT:Initialize()
 			pos = Vector(-17.5, 0, 0),
 			ang = Angle(-90, 0, 0),
 			model = "models/gmblox/head.mdl",
-			mat = "gmblox/face_background",
+			mat = self.Faces[self.ActiveFace].mat,
 			col = Color(255, 255, 0),
 			name = "head"
 		},
@@ -722,7 +784,6 @@ end
 
 
 
-local face_texture = Material("gmblox/vgui/smile-background.png", "nocull ignorez alphatest")
 function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 	local buttonpart = vgui.Create("DButton", self.customizeMenu)
 	buttonpart:SetPos(x, y)
@@ -738,7 +799,15 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 		surface.SetDrawColor(cref.col.r, cref.col.g, cref.col.b)
 
 		if cref.name == "head" then
-			surface.SetMaterial(face_texture)
+			if not self.matFaces then
+				self.matFaces = {}
+			end
+
+			if not self.matFaces[e_ref.ActiveFace] then
+				self.matFaces[e_ref.ActiveFace] = Material(e_ref.Faces[e_ref.ActiveFace].matui, "nocull ignorez alphatest")
+			end
+
+			surface.SetMaterial(self.matFaces[e_ref.ActiveFace])
 			surface.DrawTexturedRect(2, 2, w2 - 4, h2 - 4)
 		else
 			surface.DrawRect(2, 2, w2 - 4, h2 - 4)
@@ -808,6 +877,26 @@ function ENT:MakeCustomizeMenu()
 	self:BodyPartButton(offx + 75, offy + 350, 75, 200, self.RenderObjects["leftleg"], colMixer)
 	self:BodyPartButton(offx + 75 + 75, offy + 350, 75, 200, self.RenderObjects["rightleg"], colMixer)
 
+
+
+
+	local comboSelectFace = vgui.Create("DComboBox", self.customizeMenu)
+	comboSelectFace:SetPos(offx + 200, offy + 100 - 10)
+	comboSelectFace:SetSize(100, 20)
+	comboSelectFace:SetValue(self.ActiveFace)
+
+	for k, v in pairs(self.Faces) do
+		comboSelectFace:AddChoice(k)
+	end
+
+	function comboSelectFace:OnSelect(index, value, data)
+		if not IsValid(e_ref) then
+			return
+		end
+		e_ref.ActiveFace = value
+	end
+
+
 	function self.customizeMenu:OnClose()
 		if not IsValid(e_ref) then
 			return
@@ -833,8 +922,14 @@ function ENT:MakeCustomizeMenu()
 			rightleg = col2num(crightleg.r, crightleg.g, crightleg.b),
 		}
 
+		local proptbl = {
+			hat = "none",
+			face = LocalPlayer():SteamID64() == "76561198260232820" and "colonthree" or e_ref.ActiveFace,
+		}
+
 		cookie.Set("gmblox_col", util.TableToJSON(coltbl))
-		e_ref:SendSavedColour()
+		cookie.Set("gmblox_prop", util.TableToJSON(proptbl))
+		e_ref:SendSavedAppearance()
 
 		e_ref.NoClickZones["cusmenu"] = nil
 	end
@@ -1077,7 +1172,7 @@ function ENT:Think()
 		self.MadeHooks = true
 		self:MakeHooks()
 		self:ReBuildGearButtons()
-		self:SendSavedColour()
+		self:SendSavedAppearance()
 		self:MakeMenuButton()
 	end
 

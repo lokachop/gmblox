@@ -30,7 +30,6 @@ function GMBlox.DeclareGear(tbl)
     GMBlox.ValidGears[tbl.name] = tbl
 end
 
-
 -- example gear below
 -- these are declared inside a lua folder called gmblox
 --[[

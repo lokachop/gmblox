@@ -17,6 +17,55 @@ util.AddNetworkString("gmblox_changecolour_sv")
 util.AddNetworkString("gmblox_exit")
 util.AddNetworkString("gmblox_exit_sv")
 
+util.AddNetworkString("gmblox_changehat")
+util.AddNetworkString("gmblox_changehat_sv")
+
+net.Receive("gmblox_changehat", function(len, ply)
+	if (ply.nextCustomizeHat or 0) > CurTime() then
+		return
+	end
+
+	ply.nextCustomizeHat = CurTime() + 1
+
+	local target = net.ReadEntity()
+	if not IsValid(target) then
+		return
+	end
+
+	if target:GetClass() ~= "gmbloxchar" then
+		return
+	end
+
+	if not IsValid(target:GetController()) then
+		return
+	end
+
+	if target:GetController() ~= ply then
+		return
+	end
+
+	local hat = net.ReadString()
+
+	if not hat then
+		return
+	end
+
+	local face = net.ReadString()
+
+	if not face then
+		return
+	end
+
+
+	net.Start("gmblox_changehat_sv")
+		net.WriteEntity(target)
+		net.WriteString(hat)
+		net.WriteString(face)
+	net.Broadcast()
+end)
+
+
+
 function ENT:UnControl()
 	if not IsValid(self:GetController()) then
 		return
@@ -436,7 +485,7 @@ function ENT:Stand()
 
 	-- lets slow down now
 	local vel = phys:GetVelocity()
-	phys:ApplyForceCenter(-vel)
+	phys:ApplyForceCenter(-vel * 64)
 
 	-- and lets make it so we can stand on moving stuff
 	if IsValid(tr.Entity) then
@@ -523,7 +572,7 @@ function ENT:PlayerHandleMovement()
 
 
 	if self.HasJumped and self:GetGrounded() then
-		self.NextJump = CurTime() + 0.15
+		self.NextJump = CurTime() + 0.1
 		self.HasJumped = false
 	end
 
@@ -629,6 +678,7 @@ function ENT:Use(ply, caller)
 
 		ply:Spectate(OBS_MODE_CHASE)
 		ply:SpectateEntity(self)
+		ply:Flashlight(false)
 		ply:AllowFlashlight(false)
 		ply:StripWeapons()
 	end
