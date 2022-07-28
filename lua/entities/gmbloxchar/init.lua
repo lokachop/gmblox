@@ -222,6 +222,10 @@ net.Receive("gmblox_equipgear", function(len, ply)
 		return
 	end
 
+	if not GMBlox.IsAllowedLUT[gear] then
+		return
+	end
+
 	local gearData = GMBlox.ValidGears[gear]
 	if not gearData then
 		return
@@ -283,6 +287,10 @@ net.Receive("gmblox_firegear", function(len, ply)
 	end
 
 	if gear ~= target:GetActiveGear() then
+		return
+	end
+
+	if not GMBlox.IsAllowedLUT[gear] then
 		return
 	end
 
@@ -486,9 +494,12 @@ function ENT:Stand()
 	-- lets slow down now
 	local vel = phys:GetVelocity()
 	phys:ApplyForceCenter(-vel * 64)
+
+	-- need for playerstanding
+	return tr
 end
 
-function ENT:PlayerHandleMovement()
+function ENT:PlayerHandleMovement(tr)
 	if not self:GetStanding() then
 		return
 	end
@@ -562,8 +573,14 @@ function ENT:PlayerHandleMovement()
 	local airVel = self:GetVelocity()
 	airVel.z = 0
 
+	local evel = Vector(0, 0, 0)
+	if tr and tr.Hit and IsValid(tr.Entity) then
+		evel = tr.Entity:GetVelocity()
+	end
+
+
 	local vcalc = totalVel * 120
-	phys:SetVelocity(Vector(vcalc.x, vcalc.y, phys:GetVelocity().z))
+	phys:SetVelocity(Vector(evel.x + vcalc.x, evel.y + vcalc.y, evel.z + phys:GetVelocity().z))
 
 
 	if self.HasJumped and self:GetGrounded() then
@@ -650,12 +667,13 @@ end
 
 function ENT:Think()
 	self:FallOverCheck()
+	local tr
 	if self:GetStanding() then
-		self:Stand()
+		tr = self:Stand()
 	end
 
 	self:DieIfNeeded()
-	self:PlayerHandleMovement()
+	self:PlayerHandleMovement(tr)
 	self:ThinkGear()
 
 	self:NextThink(CurTime() + 0.025)

@@ -332,7 +332,7 @@ function ENT:Initialize()
 	self.LastGroundState = false
 	self.LowerArmTime = 0
 
-	self.Inventory = {
+	self.Inventory = GMBlox.DefaultInventory or {
 		"rocketlauncher",
 		"superball",
 		"slingshot",

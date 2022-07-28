@@ -47,4 +47,4 @@ end
 GEAR.svEquip = function(ent)
 end
 
-GMBlox.DeclareGear(GEAR)
+--GMBlox.DeclareGear(GEAR)
