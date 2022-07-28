@@ -16,8 +16,6 @@ surface.CreateFont("GMBlox_Trebuchet18", {
 	additive = false,
 })
 
-
-
 local function col2num(r, g, b)
 	return r + bit.lshift(g, 8) + bit.lshift(b, 16)
 end
@@ -185,15 +183,17 @@ function ENT:Initialize()
 
 	self.Faces = {
 		["normal"] = {
-			name = "Smile",
 			mat = "gmblox/face_background",
 			matui = "gmblox/vgui/smile-background.png",
 		},
-		["colonthree"] = {
-			name = ":3",
+		[":3"] = {
 			mat = "gmblox/colonthreebackground",
 			matui = "gmblox/vgui/colonthree-background.png",
-		}
+		},
+		["drool"] = {
+			mat = "gmblox/face_drool",
+			matui = "gmblox/vgui/face_drool.png",
+		},
 	}
 
 
@@ -924,7 +924,7 @@ function ENT:MakeCustomizeMenu()
 
 		local proptbl = {
 			hat = "none",
-			face = LocalPlayer():SteamID64() == "76561198260232820" and "colonthree" or e_ref.ActiveFace,
+			face = e_ref.ActiveFace,
 		}
 
 		cookie.Set("gmblox_col", util.TableToJSON(coltbl))

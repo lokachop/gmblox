@@ -486,11 +486,6 @@ function ENT:Stand()
 	-- lets slow down now
 	local vel = phys:GetVelocity()
 	phys:ApplyForceCenter(-vel * 64)
-
-	-- and lets make it so we can stand on moving stuff
-	if IsValid(tr.Entity) then
-		phys:ApplyForceCenter(tr.Entity:GetVelocity())
-	end
 end
 
 function ENT:PlayerHandleMovement()
