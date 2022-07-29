@@ -390,7 +390,6 @@ function ENT:Initialize()
 	self.InternZoom = 1
 
 	self:SetHealthRoblox(100)
-	self:SetRandomColour(math.random(0, 360))
 end
 
 function ENT:SpawnFunction(ply, tr, classname)

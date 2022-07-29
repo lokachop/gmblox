@@ -1,3 +1,10 @@
+if CLIENT then
+	CreateClientConVar("gmblox_drawscoreboard", 1, true, false, "Toggles rendering the scoreboard while on a GMBlox character", 0, 1)
+end
+
+GMBlox = GMBlox or {}
+
+
 hook.Add("AddToolMenuCategories", "GMBloxCategories", function()
 	spawnmenu.AddToolCategory("Options", "GMBlox", "GMBlox")
 end)
@@ -15,22 +22,21 @@ hook.Add("PopulateToolMenu", "GMBloxPopulate", function()
 		dform:ClearControls()
 		dform:Help("Default gear list")
 		for k, v in pairs(GMBlox.ValidGears) do
-			local check = dform:CheckBox(v.name, "gmblox_gear_" .. v.name .. "_is_default")
+			local cb = vgui.Create("DCheckBoxLabel")
+			cb:SetText(v.name)
+			cb:SetTextColor(Color(0, 0, 0))
+			cb:SetValue(GMBlox.IsAllowedLUT[v.name])
 
-			function check:OnChange()
-				net.Start("gmblox_convarchanged_isdefault")
+			function cb:OnChange(val)
+				net.Start("gmblox_change_is_allowed")
+					net.WriteString(v.name)
+					net.WriteBool(tobool(val))
 				net.SendToServer()
 			end
+
+			dform:AddItem(cb)
 		end
 
 		dform:Help("GMBlox, by lokachop")
 	end)
 end)
-
-if CLIENT then
-	CreateClientConVar("gmblox_drawscoreboard", 1, true, false, "Toggles rendering the scoreboard while on a GMBlox character", 0, 1)
-end
-
-for k, v in pairs(GMBlox.ValidGears) do
-	CreateConVar("gmblox_gear_" .. v.name .. "_is_default", 1, bit.bor(FCVAR_ARCHIVE, FCVAR_REPLICATED), "Toggles whether or not the " .. v.name .. " gear is given on spawn", 0, 1)
-end

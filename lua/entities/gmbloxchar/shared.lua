@@ -13,7 +13,6 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Bool", 0, "Standing")
 	self:NetworkVar("Bool", 1, "Grounded")
 	self:NetworkVar("Int", 0, "HealthRoblox")
-	self:NetworkVar("Int", 1, "RandomColour")
 	self:NetworkVar("Entity", 0, "Controller")
 	self:NetworkVar("String", 0, "ActiveGear")
 

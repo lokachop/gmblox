@@ -7,7 +7,7 @@
 
 GMBlox = GMBlox or {}
 GMBlox.ValidGears = {}
-GMBlox.DefaultInventory = {
+GMBlox.DefaultInventory = GMBlox.DefaultInventory or {
     "rocketlauncher",
     "superball",
     "slingshot",
@@ -17,27 +17,18 @@ GMBlox.DefaultInventory = {
     "cheezburger"
 }
 
-GMBlox.IsAllowedLUT = {}
+GMBlox.IsAllowedLUT = GMBlox.IsAllowedLUT or {}
 
 function GMBlox.RebuildIsAllowedLUT()
     GMBlox.IsAllowedLUT = {}
+
     for k, v in pairs(GMBlox.DefaultInventory) do
         GMBlox.IsAllowedLUT[v] = true
     end
 end
 
-function GMBlox.RebuildDefaultInventory()
-    GMBlox.DefaultInventory = {}
-    for k, v in pairs(GMBlox.ValidGears) do
-        local isallowed = GetConVar("gmblox_gear_" .. v.name .. "_is_default"):GetBool()
 
-        if isallowed then
-            GMBlox.DefaultInventory[#GMBlox.DefaultInventory + 1] = v.name
-        end
-    end
 
-    GMBlox.RebuildIsAllowedLUT()
-end
 
 -- creates a valid gear from a table
 function GMBlox.DeclareGear(tbl)
@@ -96,36 +87,4 @@ for _, v in pairs(files) do
         AddCSLuaFile("gmblox/" .. v)
     end
     include("gmblox/" .. v)
-end
-
-
-GMBlox.RebuildDefaultInventory()
-
-
-if SERVER then
-    util.AddNetworkString("gmblox_convarchanged_isdefault")
-    util.AddNetworkString("gmblox_convarchanged_isdefault_cl")
-
-    net.Receive("gmblox_convarchanged_isdefault", function(len, ply)
-        if (ply.NextConvarChanged or 0) > CurTime() then
-            return
-        end
-
-        ply.NextConvarChanged = CurTime() + 0.1
-
-        if not ply:IsSuperAdmin() then
-            return
-        end
-
-        GMBlox.RebuildDefaultInventory()
-        net.Start("gmblox_convarchanged_isdefault_cl")
-        net.Broadcast()
-    end)
-
-end
-
-if CLIENT then
-    net.Receive("gmblox_convarchanged_isdefault_cl", function()
-        GMBlox.RebuildDefaultInventory()
-    end)
 end

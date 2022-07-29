@@ -202,7 +202,6 @@ function ENT:Initialize()
 	self.ActiveHat = nil
 	self.ActiveFace = "normal"
 
-	-- i use materials because colours break for some reason
 	self.RenderObjects = {
 		["head"] = {
 			pos = Vector(-17.5, 0, 0),
@@ -217,7 +216,7 @@ function ENT:Initialize()
 			ang = Angle(0, 0, 90),
 			model = "models/gmblox/torso.mdl",
 			mat = "gmblox/robloxwhite",
-			col = HSVToColor(self:GetRandomColour(), 0.5, 1),
+			col = HSVToColor(200, 0.5, 1),
 			name = "torso"
 		},
 
