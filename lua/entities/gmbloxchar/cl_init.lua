@@ -216,7 +216,7 @@ function ENT:Initialize()
 			ang = Angle(0, 0, 90),
 			model = "models/gmblox/torso.mdl",
 			mat = "gmblox/robloxwhite",
-			col = HSVToColor(200, 0.5, 1),
+			col = HSVToColor(230, 0.5, 1),
 			name = "torso"
 		},
 
