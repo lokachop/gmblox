@@ -22,12 +22,20 @@ end
 function GMBlox.AddGearToSave(name)
     local allowed = file.Read("gmblox_allowed_gears.txt", "DATA")
     if not allowed then
-        allowed = "[]"
+        allowed = ""
     end
 
     local alltbl = util.JSONToTable(allowed)
     if not alltbl then
-        alltbl = {}
+        alltbl = {
+            "rocketlauncher",
+            "superball",
+            "slingshot",
+            "paintball",
+            "bloxycola",
+            "pizza",
+            "cheezburger"
+        }
     end
 
     alltbl[name] = true

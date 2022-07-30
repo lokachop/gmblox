@@ -1010,6 +1010,7 @@ function ENT:MakeCreditsMenu()
 	makeCreditAndReason(self.creditsMenu, "sweepy", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198277636412")
 	makeCreditAndReason(self.creditsMenu, "Swedish Swede", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198260232820")
 	makeCreditAndReason(self.creditsMenu, "Lord_Arcness", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198118355002")
+	makeCreditAndReason(self.creditsMenu, "MISTER BONES", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198056452663")
 	makeCreditAndReason(self.creditsMenu, "ROBLOX", "Original Game", "https://www.roblox.com/")
 	makeCreditAndReason(self.creditsMenu, "GMPublisher", "Used for publishing to the workshop", "https://github.com/WilliamVenner/gmpublisher")
 
