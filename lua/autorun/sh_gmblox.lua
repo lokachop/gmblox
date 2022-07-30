@@ -26,7 +26,7 @@ function GMBlox.RebuildIsAllowedLUT()
         GMBlox.IsAllowedLUT[v] = true
     end
 end
-
+GMBlox.RebuildIsAllowedLUT()
 
 
 
