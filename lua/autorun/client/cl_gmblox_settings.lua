@@ -3,7 +3,7 @@ if CLIENT then
 end
 
 GMBlox = GMBlox or {}
-
+GMBlox.CheckList = GMBlox.CheckList or {}
 
 hook.Add("AddToolMenuCategories", "GMBloxCategories", function()
 	spawnmenu.AddToolCategory("Options", "GMBlox", "GMBlox")
@@ -27,7 +27,14 @@ hook.Add("PopulateToolMenu", "GMBloxPopulate", function()
 			cb:SetTextColor(Color(0, 0, 0))
 			cb:SetValue(GMBlox.IsAllowedLUT[v.name])
 
+			GMBlox.CheckList[v.name] = cb
+
 			function cb:OnChange(val)
+				if not LocalPlayer():IsSuperAdmin() then
+					self:SetChecked(GMBlox.IsAllowedLUT[v.name])
+					return
+				end
+
 				net.Start("gmblox_change_is_allowed")
 					net.WriteString(v.name)
 					net.WriteBool(tobool(val))

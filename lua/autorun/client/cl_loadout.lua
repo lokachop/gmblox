@@ -13,6 +13,16 @@ net.Receive("gmblox_change_is_allowed_cl", function()
         GMBlox.DefaultInventory[#GMBlox.DefaultInventory + 1] = v
     end
     GMBlox.RebuildIsAllowedLUT()
+
+    if not GMBlox.CheckList then
+        return
+    end
+
+    for k, v in pairs(GMBlox.ValidGears) do
+        if GMBlox.CheckList[v.name] then
+            GMBlox.CheckList[v.name]:SetChecked(GMBlox.IsAllowedLUT[v.name] or false)
+        end
+    end
 end)
 
 
