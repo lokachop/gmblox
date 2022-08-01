@@ -7,6 +7,7 @@
 
 GMBlox = GMBlox or {}
 GMBlox.ValidGears = {}
+GMBlox.ValidFaces = {}
 GMBlox.DefaultInventory = GMBlox.DefaultInventory or {
     "rocketlauncher",
     "superball",
@@ -52,33 +53,18 @@ function GMBlox.DeclareGear(tbl)
     GMBlox.ValidGears[tbl.name] = tbl
 end
 
--- example gear below
--- these are declared inside a lua folder called gmblox
---[[
-local GEAR = {}
-GEAR.name = "test gear" -- name of the gear
-GEAR.desc = "this is a test gear" -- optional
-GEAR.icon = "gmblox/vgui/Rocket.png" -- optional
-
-GEAR.model = "models/props_junk/PopCan01a.mdl"
-GEAR.modelOffset = Vector(0, 0, 0)
-GEAR.angleOffset = Angle(0, 0, 0)
-
-GEAR.material = "models/debug/debugwhite" -- material to paint the worldmodel, can be empty
-GEAR.useCooldown = 0.1 -- wait this many seconds before using again
-
--- tr is a screentrace
-GEAR.clCallback = function(ent, tr)
-    -- do stuff
+function GMBlox.DeclareFace(name, mat, mat_ui)
+    GMBlox.ValidFaces[name] = {
+        mat = mat,
+        matui = mat_ui
+    }
 end
 
-GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
-    -- do stuff
-end
+-- declare og faces
 
-GMBlox.DeclareGear(GEAR)
-]]--
-
+GMBlox.DeclareFace("normal", "gmblox/face_background", "gmblox/vgui/smile-background.png")
+GMBlox.DeclareFace(":3", "gmblox/colonthreebackground", "gmblox/vgui/colonthree-background.png")
+GMBlox.DeclareFace("drool", "gmblox/face_drool", "gmblox/vgui/face_drool.png")
 
 -- lets load all the gears now
 local files = file.Find("gmblox/*.lua", "LUA")
