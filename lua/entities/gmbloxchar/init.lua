@@ -392,6 +392,8 @@ function ENT:Initialize()
 	self.targetAng = Angle(90, 0, 0)
 	self.NextFires = {}
 	self.InternZoom = 1
+	self.WalkSpeed = 120
+	self.JumpPower = 11
 
 	self:SetHealthRoblox(100)
 end
@@ -582,7 +584,7 @@ function ENT:PlayerHandleMovement(tr)
 	end
 
 
-	local vcalc = totalVel * 120
+	local vcalc = totalVel * self.WalkSpeed
 	phys:SetVelocity(Vector(evel.x + vcalc.x, evel.y + vcalc.y, evel.z + phys:GetVelocity().z))
 
 
@@ -604,7 +606,7 @@ function ENT:PlayerHandleMovement(tr)
 		end
 
 
-		phys:ApplyForceCenter(Vector(0, 0, 110000))
+		phys:ApplyForceCenter(Vector(0, 0, self.JumpPower * 10000))
 		self.NextJump = CurTime() + 0.25
 		self.HasJumped = true
 		self:EmitSound("gmblox/jump.wav")
