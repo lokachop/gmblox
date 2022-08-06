@@ -34,7 +34,27 @@ function ApplyAngForce(ent, angForce)
 	end
 end
 
-function ENT:Stand()
+local can_collide = {
+	[COLLISION_GROUP_NONE] = true,
+	[COLLISION_GROUP_PLAYER] = true,
+	[COLLISION_GROUP_VEHICLE] = true,
+	[COLLISION_GROUP_BREAKABLE_GLASS] = true,
+	[COLLISION_GROUP_NPC] = true,
+}
+
+function ENT:Stand(filter)
+	filter = filter or {}
+	if (self.StandItr or 0) > 6 then
+		self.StandItr = 0
+		return
+	end
+
+	self.StandItr = (self.StandItr or 0) + 1
+
+	if filter[1] ~= self then
+		filter[1] = self
+	end
+
 	-- there's probably a much better way to do all of this but i horribly suck at vector math and this works
 	-- if anyone knows a better method, please commit!
 
@@ -63,8 +83,17 @@ function ENT:Stand()
 	local tr = util.TraceLine({
 		start = self:GetPos(),
 		endpos = self:GetPos() - Vector(0, 0, suspLen),
-		filter = self,
+		filter = filter,
 	})
+
+	if tr.Hit and not can_collide[tr.Entity:GetCollisionGroup()] then
+		filter[#filter + 1] = tr.Entity
+		self:Stand(filter)
+		return
+	else
+		self.StandItr = 0
+	end
+
 
 	if not tr.Hit then
 		self:SetGrounded(false)
