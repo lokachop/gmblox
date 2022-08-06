@@ -71,6 +71,7 @@ net.Receive("gmblox_changehat_sv", function()
 	end
 
 	ro["head"].mat = target.Faces[face].mat
+	target.ActiveHat = hat or "None"
 
 	target:BuildCSModels()
 end)
@@ -83,6 +84,10 @@ function ENT:RemoveCSModels()
 
 	if IsValid(self.GearCSModel) then
 		self.GearCSModel:Remove()
+	end
+
+	if IsValid(self.HatCSModel) then
+		self.HatCSModel:Remove()
 	end
 end
 
@@ -120,6 +125,7 @@ function ENT:BuildCSModels()
 	end
 
 	self:RebuildActiveGear()
+	self:RebuildActiveHat()
 end
 
 function ENT:SendSavedAppearance()
@@ -181,7 +187,7 @@ function ENT:Initialize()
 	self.TargetPitches = {}
 	self.CurrentPitches = {}
 
-	self.Faces = {
+	self.Faces = GMBlox.ValidFaces or {
 		["normal"] = {
 			mat = "gmblox/face_background",
 			matui = "gmblox/vgui/smile-background.png",
@@ -197,9 +203,9 @@ function ENT:Initialize()
 	}
 
 
-	self.Hats = {}
+	self.Hats = GMBlox.ValidHats or {}
 
-	self.ActiveHat = nil
+	self.ActiveHat = "None"
 	self.ActiveFace = "normal"
 
 	self.RenderObjects = {
@@ -322,6 +328,9 @@ function ENT:Initialize()
 
 
 	self.GearCSModel = nil
+	self.HatCSModel = nil
+
+
 	self.ActiveButtons = {}
 	self.LastActiveGear = ""
 	self.NextFires = {}
@@ -369,6 +378,34 @@ function ENT:RebuildActiveGear()
 	end
 
 	self:OffsetAndParentCSModel(self.GearCSModel, offpos, offang)
+end
+
+function ENT:RebuildActiveHat()
+	if IsValid(self.HatCSModel) then
+		self.HatCSModel:Remove()
+	end
+
+	local hat = self.ActiveHat
+	if hat == "" then
+		return
+	end
+
+	if hat == "None" then
+		return
+	end
+
+
+	local hatinf = GMBlox.ValidHats[hat]
+
+	if not hatinf then
+		return
+	end
+
+	self.HatCSModel = ClientsideModel(hatinf.model, RENDERGROUP_OPAQUE)
+	local offpos = hatinf.posOffset + Vector(-24, 0, 0)
+	local offang = hatinf.angleOffset + Angle(90, 0, 0)
+
+	self:OffsetAndParentCSModel(self.HatCSModel, offpos, offang)
 end
 
 
@@ -438,6 +475,10 @@ function ENT:Draw()
 
 	if IsValid(self.GearCSModel) then
 		self.GearCSModel:CreateShadow()
+	end
+
+	if IsValid(self.HatCSModel) then
+		self.HatCSModel:CreateShadow()
 	end
 end
 
@@ -896,6 +937,23 @@ function ENT:MakeCustomizeMenu()
 	end
 
 
+	local comboSelectHat = vgui.Create("DComboBox", self.customizeMenu)
+	comboSelectHat:SetPos(offx + 200, offy + 200 - 10)
+	comboSelectHat:SetSize(100, 20)
+	comboSelectHat:SetValue(self.ActiveHat or "None")
+
+	for k, v in pairs(self.Hats) do
+		comboSelectHat:AddChoice(v.name)
+	end
+	comboSelectHat:AddChoice("None")
+
+	function comboSelectHat:OnSelect(index, value, data)
+		if not IsValid(e_ref) then
+			return
+		end
+		e_ref.ActiveHat = value
+	end
+
 	function self.customizeMenu:OnClose()
 		if not IsValid(e_ref) then
 			return
@@ -922,7 +980,7 @@ function ENT:MakeCustomizeMenu()
 		}
 
 		local proptbl = {
-			hat = "none",
+			hat = e_ref.ActiveHat,
 			face = e_ref.ActiveFace,
 		}
 

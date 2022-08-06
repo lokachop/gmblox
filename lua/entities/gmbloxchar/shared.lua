@@ -15,6 +15,7 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Int", 0, "HealthRoblox")
 	self:NetworkVar("Entity", 0, "Controller")
 	self:NetworkVar("String", 0, "ActiveGear")
+	self:NetworkVar("String", 1, "ActiveHat")
 
 	self:NetworkVar("Vector", 0, "GearOffset")
 	self:NetworkVar("Angle", 0, "GearAngle")

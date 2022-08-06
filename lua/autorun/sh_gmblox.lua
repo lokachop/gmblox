@@ -8,6 +8,7 @@
 GMBlox = GMBlox or {}
 GMBlox.ValidGears = {}
 GMBlox.ValidFaces = {}
+GMBlox.ValidHats = {}
 GMBlox.DefaultInventory = GMBlox.DefaultInventory or {
     "rocketlauncher",
     "superball",
@@ -60,11 +61,23 @@ function GMBlox.DeclareFace(name, mat, mat_ui)
     }
 end
 
--- declare og faces
+function GMBlox.DeclareHat(name, model, posoff, angoff)
+    GMBlox.ValidHats[name] = {
+        model = model,
+        posOffset = posoff,
+        angleOffset = angoff,
+        name = name
+    }
+end
 
+
+
+-- declare og faces
 GMBlox.DeclareFace("normal", "gmblox/face_background", "gmblox/vgui/smile-background.png")
 GMBlox.DeclareFace(":3", "gmblox/colonthreebackground", "gmblox/vgui/colonthree-background.png")
 GMBlox.DeclareFace("drool", "gmblox/face_drool", "gmblox/vgui/face_drool.png")
+
+GMBlox.DeclareHat("cone", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
 
 -- lets load all the gears now
 local files = file.Find("gmblox/*.lua", "LUA")
