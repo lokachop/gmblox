@@ -44,9 +44,10 @@ local can_collide = {
 
 function ENT:Stand(filter)
 	filter = filter or {}
+	local noCheck = false
 	if (self.StandItr or 0) > 6 then
 		self.StandItr = 0
-		return
+		noCheck = true
 	end
 
 	self.StandItr = (self.StandItr or 0) + 1
@@ -86,14 +87,16 @@ function ENT:Stand(filter)
 		filter = filter,
 	})
 
-	if tr.Hit and not can_collide[tr.Entity:GetCollisionGroup()] then
-		filter[#filter + 1] = tr.Entity
-		self:Stand(filter)
-		return
-	else
-		self.StandItr = 0
-	end
 
+	if not noCheck then
+		if tr.Hit and not can_collide[tr.Entity:GetCollisionGroup()] then
+			filter[#filter + 1] = tr.Entity
+			self:Stand(filter)
+			return
+		else
+			self.StandItr = 0
+		end
+	end
 
 	if not tr.Hit then
 		self:SetGrounded(false)
