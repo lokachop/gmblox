@@ -11,6 +11,12 @@ function GMBlox.RebuildDefaultInventory()
         alltbl = {}
     end
 
+    for k, v in pairs(alltbl) do
+        if not GMBlox.ValidGears[k] then
+            alltbl[k] = nil
+        end
+    end
+
     GMBlox.DefaultInventory = {}
     for k, v in pairs(alltbl) do
         GMBlox.DefaultInventory[#GMBlox.DefaultInventory + 1] = k
@@ -30,6 +36,12 @@ function GMBlox.AddGearToSave(name)
         alltbl = {}
     end
 
+    for k, v in pairs(alltbl) do
+        if not GMBlox.ValidGears[k] then
+            alltbl[k] = nil
+        end
+    end
+
     alltbl[name] = true
     file.Write("gmblox_allowed_gears.txt", util.TableToJSON(alltbl))
 
@@ -45,6 +57,12 @@ function GMBlox.RemoveGearFromSave(name)
     local alltbl = util.JSONToTable(allowed)
     if not alltbl then
         alltbl = {}
+    end
+
+    for k, v in pairs(alltbl) do
+        if not GMBlox.ValidGears[k] then
+            alltbl[k] = nil
+        end
     end
 
     if alltbl[name] then
