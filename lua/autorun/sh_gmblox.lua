@@ -38,7 +38,7 @@ function GMBlox.DeclareGear(tbl)
 	tbl.desc = tbl.desc or "No description"
 	tbl.model = tbl.model or "models/props_junk/popcan01a.mdl"
 	tbl.material = tbl.material or ""
-	tbl.icon = tbl.icon or "gmblox/vgui/lua.png"
+	tbl.icon = (tbl.icon and tbl.icon ~= "") and tbl.icon or "gmblox/vgui/lua.png"
 
 	tbl.useCooldown = tbl.useCooldown or 0.5
 	tbl.clCallback = tbl.clCallback or function() end

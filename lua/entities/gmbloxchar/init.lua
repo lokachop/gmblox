@@ -74,8 +74,8 @@ function ENT:Initialize()
 	self.targetAng = Angle(90, 0, 0)
 	self.NextFires = {}
 	self.InternZoom = 1
-	self.WalkSpeed = 120
-	self.JumpPower = 11
+	self.WalkSpeedMult = 1
+	self.JumpPowerMult = 1
 
 	self:SetHealthRoblox(100)
 end
