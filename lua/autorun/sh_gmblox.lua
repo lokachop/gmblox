@@ -61,12 +61,13 @@ function GMBlox.DeclareFace(name, mat, mat_ui)
     }
 end
 
-function GMBlox.DeclareHat(name, model, posoff, angoff)
+function GMBlox.DeclareHat(name, model, posoff, angoff, scl)
     GMBlox.ValidHats[name] = {
         model = model,
         posOffset = posoff,
         angleOffset = angoff,
-        name = name
+        name = name,
+        scale = scl
     }
 end
 
@@ -77,7 +78,14 @@ GMBlox.DeclareFace("normal", "gmblox/face_background", "gmblox/vgui/smile-backgr
 GMBlox.DeclareFace(":3", "gmblox/colonthreebackground", "gmblox/vgui/colonthree-background.png")
 GMBlox.DeclareFace("drool", "gmblox/face_drool", "gmblox/vgui/face_drool.png")
 
-GMBlox.DeclareHat("cone", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
+
+
+GMBlox.DeclareHat("Lamp Shade", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
+GMBlox.DeclareHat("Cone", "models/props_junk/TrafficCone001a.mdl", Vector(-14.4, 0, 0), Angle(0, 0, 0))
+GMBlox.DeclareHat("Pot", "models/props_interiors/pot02a.mdl", Vector(-0, 6.9, -6.9), Angle(180, 0, 45), Vector(1.75, 1.75, 1.75))
+
+
+
 
 -- lets load all the gears now
 local files = file.Find("gmblox/*.lua", "LUA")

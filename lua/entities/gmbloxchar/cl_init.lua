@@ -405,6 +405,12 @@ function ENT:RebuildActiveHat()
 	local offpos = hatinf.posOffset + Vector(-24, 0, 0)
 	local offang = hatinf.angleOffset + Angle(90, 0, 0)
 
+	if hatinf.scale then
+		local mat = Matrix()
+		mat:Scale(hatinf.scale)
+		self.HatCSModel:EnableMatrix("RenderMultiply", mat)
+	end
+
 	self:OffsetAndParentCSModel(self.HatCSModel, offpos, offang)
 end
 
@@ -938,7 +944,7 @@ function ENT:MakeCustomizeMenu()
 
 
 	local comboSelectHat = vgui.Create("DComboBox", self.customizeMenu)
-	comboSelectHat:SetPos(offx + 200, offy + 200 - 10)
+	comboSelectHat:SetPos(offx + 200, offy + 120 - 10)
 	comboSelectHat:SetSize(100, 20)
 	comboSelectHat:SetValue(self.ActiveHat or "None")
 
