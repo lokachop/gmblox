@@ -429,7 +429,7 @@ function ENT:Think()
 		self:Animate(k)
 	end
 
-	if IsValid(self:GetController()) and self:GetController() == LocalPlayer() and not self.MadeHooks then
+	if not self.MadeHooks and IsValid(self:GetController()) and self:GetController() == LocalPlayer() then
 		self.MadeHooks = true
 		self:MakeHooks()
 		self:ReBuildGearButtons()
