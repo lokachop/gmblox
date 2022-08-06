@@ -56,11 +56,26 @@ function ENT:Stand(filter)
 		filter[1] = self
 	end
 
+	local svel = self:GetVelocity()
+	print(svel:Length())
+	if svel:Length() < 18 and not IsValid(self:GetController()) then
+		local sphys = self:GetPhysicsObject()
+		if IsValid(sphys) and not sphys:IsAsleep() then
+			sphys:Sleep()
+		end
+
+		if sphys:IsAsleep() then
+			return
+		end
+	end
+
+
 	-- there's probably a much better way to do all of this but i horribly suck at vector math and this works
 	-- if anyone knows a better method, please commit!
 
 	local targetAng = self.targetAng
 	local phys = self:GetPhysicsObject()
+
 
 	local reachAng = self:WorldToLocalAngles(targetAng) * 200
 	local angVel = self:GetLocalAngularVelocity() * 200

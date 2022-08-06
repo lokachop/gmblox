@@ -146,7 +146,11 @@ function ENT:Think()
 	self:PlayerHandleMovement(tr)
 	self:ThinkGear()
 
-	self:NextThink(CurTime() + 0.025)
+	if IsValid(self:GetController()) then
+		self:NextThink(CurTime() + 0.025)
+	else
+		self:NextThink(CurTime() + 0.075)
+	end
 	return true
 end
 
