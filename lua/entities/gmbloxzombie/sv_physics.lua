@@ -155,7 +155,6 @@ function ENT:ZombieChase(tr)
 	local totalVel = Vector(0, 0, 0)
 
 	totalVel = self.NearestPlayer:GetPos() - self:GetPos()
-	totalVel.z = 0
 	totalVel:Normalize()
 
 	local moved = totalVel:Length() > 0 and true or false
@@ -173,9 +172,6 @@ function ENT:ZombieChase(tr)
 		self:StopSound("gmblox/bfsl-minifigfoots1.wav")
 		self.HasWalkSound = false
 	end
-
-	local airVel = self:GetVelocity()
-	airVel.z = 0
 
 	local evel = Vector(0, 0, 0)
 	if tr and tr.Hit and IsValid(tr.Entity) then
