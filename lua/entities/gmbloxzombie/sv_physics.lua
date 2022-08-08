@@ -155,6 +155,7 @@ function ENT:ZombieChase(tr)
 	local totalVel = Vector(0, 0, 0)
 
 	totalVel = self.NearestPlayer:GetPos() - self:GetPos()
+	totalVel.z = 0
 	totalVel:Normalize()
 
 	local moved = totalVel:Length() > 0 and true or false
