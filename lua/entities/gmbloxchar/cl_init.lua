@@ -155,10 +155,6 @@ function ENT:Initialize()
 
 	self.AnimLUT = {}
 	self.AnimLUT["leftarm"] = function(ent, k)
-		if ent:GetActiveGear() ~= "" then
-			return -180, 512
-		end
-
 		if not ent:GetGrounded() or (self.LowerArmTime > CurTime()) then
 			return -270, 1024
 		end
@@ -172,6 +168,10 @@ function ENT:Initialize()
 	end
 
 	self.AnimLUT["rightarm"] = function(ent, k)
+		if ent:GetActiveGear() ~= "" then
+			return -180, 512
+		end
+
 		if not ent:GetGrounded() or (self.LowerArmTime > CurTime())  then
 			return -270, 1024
 		end

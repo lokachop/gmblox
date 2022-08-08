@@ -62,6 +62,16 @@ function ENT:Stand(filter)
 	local targetAng = self.targetAng
 	local phys = self:GetPhysicsObject()
 
+	if not IsValid(phys) then
+		return
+	end
+
+	if not IsValid(self:GetController()) then
+		-- lets slow down only if no one is controlling
+		local vel = phys:GetVelocity()
+		phys:ApplyForceCenter(-vel * 64)
+	end
+
 
 	local reachAng = self:WorldToLocalAngles(targetAng) * 200
 	local angVel = self:GetLocalAngularVelocity() * 200
@@ -109,10 +119,6 @@ function ENT:Stand(filter)
 	local force = suspStr * invdist + (suspDamp * (-self:GetVelocity().z))
 
 	phys:ApplyForceCenter(Vector(0, 0, force / 2))
-
-	-- lets slow down now
-	local vel = phys:GetVelocity()
-	phys:ApplyForceCenter(-vel * 64)
 
 	-- need for playerstanding
 	return tr

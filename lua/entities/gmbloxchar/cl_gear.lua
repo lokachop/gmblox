@@ -15,7 +15,7 @@ function ENT:RebuildActiveGear()
 		return
 	end
 
-	local offpos = gearData.modelOffset + Vector(-6, -18, 16) + self:GetGearOffset()
+	local offpos = gearData.modelOffset + Vector(-6, 18, 16) + self:GetGearOffset()
 	local offang = gearData.angleOffset + self:GetGearAngle()
 	local offmat = gearData.material
 

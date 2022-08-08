@@ -140,7 +140,7 @@ function ENT:DamageIfNear()
 	end
 
 	if tr.Entity:IsPlayer() or tr.Entity:GetClass() == "gmbloxchar" then
-		tr.Entity:TakeDamage(10)
+		tr.Entity:TakeDamage(10, self, self:GetClass())
 	end
 
 	self.NextDmg = CurTime() + 0.6

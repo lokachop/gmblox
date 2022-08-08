@@ -23,7 +23,7 @@ GEAR.clFinishedCallback = function(ent)
 end
 
 GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
-	ent:SetGearOffset(Vector(-6, 18.25, -12))
+	ent:SetGearOffset(Vector(-6, -18.25, -12))
 	ent:SetGearAngle(Angle(0, 0, 180))
 
 	ent:EmitSound("gmblox/pizza_eat.wav")
