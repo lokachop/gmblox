@@ -288,7 +288,9 @@ function ENT:Animate(k)
 		return
 	end
 
-	local diffclamp = math.Clamp(targetPitch.ang - currPitch, -RealFrameTime() * targetPitch.speed, RealFrameTime() * targetPitch.speed)
+	local t_diff = SysTime() - (self.LastAnim or 0)
+
+	local diffclamp = math.Clamp(targetPitch.ang - currPitch, -(RealFrameTime() + t_diff) * targetPitch.speed, (RealFrameTime() + t_diff) * targetPitch.speed)
 
 	self.CurrentPitches[k] = self.CurrentPitches[k] + diffclamp
 
@@ -424,10 +426,16 @@ function ENT:Think()
 	end
 
 
-	for k, v in pairs(self.CSModels) do
-		self:AnimThink(k)
-		self:Animate(k)
+
+	if (self.NextAnimTime or 0) < CurTime() then
+		for k, v in pairs(self.CSModels) do
+			self:AnimThink(k)
+			self:Animate(k)
+		end
+		self.LastAnim = SysTime()
+		self.NextAnimTime = CurTime() + (GetConVar("gmblox_animwait"):GetInt() / 1000)
 	end
+
 
 	if not self.MadeHooks and IsValid(self:GetController()) and self:GetController() == LocalPlayer() then
 		self.MadeHooks = true
@@ -445,8 +453,17 @@ function ENT:Think()
 
 	if LocalPlayer() == self:GetController() then
 		if input.IsMouseDown(MOUSE_RIGHT) then
+			if not (self.HasSavedPos or false) then
+				RememberCursorPosition()
+				self.HasSavedPos = true
+			end
 			gui.EnableScreenClicker(false)
 		elseif self.ZmMult > 0 then
+			if self.HasSavedPos then
+				RestoreCursorPosition()
+				self.HasSavedPos = false
+			end
+
 			gui.EnableScreenClicker(true)
 		end
 	end
