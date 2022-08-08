@@ -243,6 +243,10 @@ function ENT:FallOverCheck()
 				return
 			end
 
+			if self:GetHealthRoblox() <= 0 then
+				return
+			end
+
 			self.CanFallAgain = CurTime() + 1
 			self:SetStanding(true)
 			self:EmitSound("gmblox/hit.wav")
