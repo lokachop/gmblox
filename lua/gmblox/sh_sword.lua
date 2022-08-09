@@ -101,9 +101,6 @@ local function DoDmg(ent)
 		maxs = Vector(sz, sz, sz),
 	})
 
-	debugoverlay.Box(tr.HitPos, Vector(-sz, -sz, -sz), Vector(sz, sz, sz), 0.2, Color(255, 0, 0, 64))
-
-
 	if tr.Hit and IsValid(tr.Entity) then
 		tr.Entity:TakeDamage(30, ent:GetController(), ent)
 	end
