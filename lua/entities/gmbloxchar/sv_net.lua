@@ -226,9 +226,6 @@ function DoDoubleFire(target, gear)
 		return
 	end
 
-	print(target.DbFires)
-	print(CurTime() - (target.LastDbFire or 0))
-
 	if CurTime() - (target.LastDbFire or 0) > 0.3 then
 		target.DbFires = 0
 		target.LastDbFire = CurTime()
