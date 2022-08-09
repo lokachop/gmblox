@@ -41,11 +41,8 @@ function ENT:RefreshFilterTables()
 		elseif v:GetClass() == "gmbloxchar" then
 			self.targetFilter[#self.targetFilter + 1] = v
 		else
-			if v:GetClass() == "gmbloxzombie" then
-				self.targetFilter[#self.targetFilter + 1] = v
-			else
-				self.targetFilterDamage[#self.targetFilterDamage + 1] = v
-			end
+			self.targetFilter[#self.targetFilter + 1] = v
+			self.targetFilterDamage[#self.targetFilterDamage + 1] = v
 		end
 	end
 end
