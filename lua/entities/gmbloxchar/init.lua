@@ -79,6 +79,8 @@ function ENT:Initialize()
 	self.JumpPowerMult = 1
 
 	self:SetHealthRoblox(100)
+
+	self:AddEFlags(EFL_DONTBLOCKLOS)
 end
 
 function ENT:SpawnFunction(ply, tr, classname)
@@ -147,6 +149,11 @@ function ENT:Think()
 	self:PlayerHandleMovement(tr)
 	self:ThinkGear()
 
+
+	if IsValid(self:GetController()) then
+		self:GetController():SetPos(self:GetPos() + self:GetForward() * -12)
+	end
+
 	if IsValid(self:GetController()) then
 		self:NextThink(CurTime() + 0.025)
 	else
@@ -169,6 +176,8 @@ function ENT:Use(ply, caller)
 		ply:Flashlight(false)
 		ply:AllowFlashlight(false)
 		ply:StripWeapons()
+		ply:RemoveFlags(FL_NOTARGET)
+		ply:RemoveFlags(FL_AIMTARGET)
 	end
 end
 
