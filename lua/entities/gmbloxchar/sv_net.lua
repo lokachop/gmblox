@@ -188,6 +188,8 @@ net.Receive("gmblox_equipgear", function(len, ply)
 		pcall(GMBlox.ValidGears[currgear].svUnequip, target)
 	end
 
+	target:SetGearState(0)
+
 	if gear == target:GetActiveGear() then
 		target:SetActiveGear("")
 		return
@@ -209,6 +211,67 @@ net.Receive("gmblox_equipgear", function(len, ply)
 		end
 	end
 end)
+
+function DoDoubleFire(target, gear)
+	local gearData = GMBlox.ValidGears[gear]
+	if not gearData then
+		return
+	end
+
+	if not gearData.svDoubleFire then
+		return
+	end
+
+	if CurTime() < (target.NextFires[gear .. "_d"] or 0) then
+		return
+	end
+
+	print(target.DbFires)
+	print(CurTime() - (target.LastDbFire or 0))
+
+	if CurTime() - (target.LastDbFire or 0) > 0.3 then
+		target.DbFires = 0
+		target.LastDbFire = CurTime()
+		return
+	end
+
+	if (target.DbFires or 0) < 2 then
+		target.LastDbFire = CurTime()
+
+		target.DbFires = (target.DbFires or 0) + 1
+		return
+	end
+
+
+	local fine, err = pcall(gearData.svDoubleFire, target)
+	if not fine then
+		print("Error in gear \"" .. gear .. "\" double fire: " .. err)
+	end
+
+	if err then
+		return
+	end
+
+	target.NextFires[gear .. "_d"] = CurTime() + gearData.useCooldownDoubleFire
+
+	if not gearData.svDoubleFireFinished then
+		return
+	end
+
+	timer.Simple(gearData.useCooldownDoubleFire, function()
+		if not IsValid(target) then
+			return
+		end
+
+		local fine2, err2 = pcall(gearData.svDoubleFireFinished, target)
+		if not fine2 then
+			print("Error in gear \"" .. gear .. "\" double fire finished: " .. err2)
+		end
+
+		target.DbFires = 0
+	end)
+end
+
 
 
 net.Receive("gmblox_firegear", function(len, ply)
@@ -259,6 +322,8 @@ net.Receive("gmblox_firegear", function(len, ply)
 	if not gearData then
 		return
 	end
+
+	DoDoubleFire(target, gear)
 
 	if CurTime() < (target.NextFires[gear] or 0) then
 		return

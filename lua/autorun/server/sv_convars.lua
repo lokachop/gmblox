@@ -28,7 +28,7 @@ end
 function GMBlox.AddGearToSave(name)
     local allowed = file.Read("gmblox_allowed_gears.txt", "DATA")
     if not allowed then
-        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true}]]
+        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true, "sword":true}]]
     end
 
     local alltbl = util.JSONToTable(allowed)
@@ -51,7 +51,7 @@ end
 function GMBlox.RemoveGearFromSave(name)
     local allowed = file.Read("gmblox_allowed_gears.txt", "DATA")
     if not allowed then
-        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true}]]
+        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true, "sword":true}]]
     end
 
     local alltbl = util.JSONToTable(allowed)

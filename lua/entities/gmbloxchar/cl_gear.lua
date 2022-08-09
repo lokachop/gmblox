@@ -54,6 +54,10 @@ function ENT:HandleFiring()
 	end
 
 	if input.IsMouseDown(MOUSE_LEFT) then
+		if self.HasFired then
+			return
+		end
+
 		local mx, my = input.GetCursorPos()
 
 		for k, v in pairs(self.NoClickZones) do
@@ -97,6 +101,10 @@ function ENT:HandleFiring()
 			net.WriteEntity(self)
 			net.WriteVector(tr.HitPos)
 		net.SendToServer()
+
+		self.HasFired = true
+	elseif self.HasFired then
+		self.HasFired = false
 	end
 end
 

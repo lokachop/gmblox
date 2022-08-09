@@ -41,6 +41,7 @@ function GMBlox.DeclareGear(tbl)
 	tbl.icon = (tbl.icon and tbl.icon ~= "") and tbl.icon or "gmblox/vgui/lua.png"
 
 	tbl.useCooldown = tbl.useCooldown or 0.5
+	tbl.useCooldownDoubleFire = tbl.useCooldownDoubleFire or 0.5
 	tbl.clCallback = tbl.clCallback or function() end
 	tbl.svCallback = tbl.svCallback or function() end
 	tbl.clFinishedCallback = tbl.clFinishedCallback or function() end

@@ -318,8 +318,10 @@ function ENT:AnimThink(k)
 			return
 		end
 
-		self.TargetPitches[k] = {ang = ret, speed = rate or self.TargetPitches[k].speed}
-		return
+		if fine and ret and rate then
+			self.TargetPitches[k] = {ang = ret, speed = rate or self.TargetPitches[k].speed}
+			return
+		end
 	end
 
 
