@@ -33,31 +33,21 @@ end
 
 function ENT:RefreshFilterTables()
 	self.targetFilter = {}
+	self.targetFilterDamage = {}
 	local entc = ents.GetAll()
-	for k, v in pairs(entc) do
+	for k, v in ipairs(entc) do
 		if v:IsPlayer() then
 			self.targetFilter[#self.targetFilter + 1] = v
-		end
-
-		if v:GetClass() == "gmbloxchar" then
+		elseif v:GetClass() == "gmbloxchar" then
 			self.targetFilter[#self.targetFilter + 1] = v
-		end
-
-		if v:GetClass() == "gmbloxzombie" then
-			self.targetFilter[#self.targetFilter + 1] = v
+		else
+			if v:GetClass() == "gmbloxzombie" then
+				self.targetFilter[#self.targetFilter + 1] = v
+			else
+				self.targetFilterDamage[#self.targetFilterDamage + 1] = v
+			end
 		end
 	end
-
-
-	self.targetFilterDamage = {}
-
-	local filt = ents.GetAll()
-	for k, v in pairs(filt) do
-		if not v:IsPlayer() and v:GetClass() ~= "gmbloxchar" then
-			self.targetFilterDamage[#self.targetFilterDamage + 1] = v
-		end
-	end
-
 end
 
 
@@ -67,7 +57,7 @@ function ENT:RefindNearestPlayer()
 	local ents_near = ents.FindInSphere(self:GetPos(), 2048)
 	local last_closest = math.huge
 
-	for k, v in pairs(ents_near) do
+	for k, v in ipairs(ents_near) do
 		if v:IsValid() and v:IsPlayer() and (v:Health() > 0) and v:GetPos():DistToSqr(self:GetPos()) < last_closest then
 			last_closest = v:GetPos():DistToSqr(self:GetPos())
 			self.NearestPlayer = v
