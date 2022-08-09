@@ -3,6 +3,7 @@ include("cl_gear.lua")
 include("cl_ui.lua")
 include("cl_menu.lua")
 include("cl_net.lua")
+include("cl_shiftlock.lua")
 
 surface.CreateFont("GMBlox_Trebuchet18Bold", {
 	font = "Trebuchet MS",
@@ -357,9 +358,11 @@ end
 
 function ENT:MakeHooks()
 	hook.Add("CalcView", "GMBloxControl", function(ply, origin, ang)
+		local addShLock = (self.ShLockOn and self.ZmMult > 0) and self:GetRight() * 20 or self:GetRight() * 0
+
 		local tr = util.TraceLine({
-			start = self:GetPos() + Vector(0, 0, 16),
-			endpos = (self:GetPos() - (ang:Forward() * 100) * self.ZmMult) + self:GetForward() * -22,
+			start = self:GetPos() + Vector(0, 0, 16) + addShLock,
+			endpos = (self:GetPos() - (ang:Forward() * 100) * self.ZmMult) + self:GetForward() * -20 + addShLock,
 			filter = self
 		})
 
@@ -410,6 +413,10 @@ function ENT:MakeHooks()
 				self.ZmMult = 4
 			end
 
+			if self.ShLockOn then
+				return
+			end
+
 			net.Start("gmblox_changezoom")
 				net.WriteEntity(self)
 				net.WriteFloat(self.ZmMult)
@@ -445,29 +452,14 @@ function ENT:Think()
 		self:ReBuildGearButtons()
 		self:SendSavedAppearance()
 		self:MakeMenuButton()
+		self:MakeShiftlockButton()
 	end
+
 
 	if self.LastActiveGear ~= self:GetActiveGear() then
 		self.LastActiveGear = self:GetActiveGear()
 		self:RebuildActiveGear()
 		self:CallGearOnEquip()
-	end
-
-	if LocalPlayer() == self:GetController() then
-		if input.IsMouseDown(MOUSE_RIGHT) then
-			if not (self.HasSavedPos or false) then
-				RememberCursorPosition()
-				self.HasSavedPos = true
-			end
-			gui.EnableScreenClicker(false)
-		elseif self.ZmMult > 0 then
-			if self.HasSavedPos then
-				RestoreCursorPosition()
-				self.HasSavedPos = false
-			end
-
-			gui.EnableScreenClicker(true)
-		end
 	end
 
 	if not IsValid(self:GetController()) then
@@ -477,6 +469,10 @@ function ENT:Think()
 	self:HandleQuickSwitch()
 	self:HandleFiring()
 	self:GearThink()
+
+
+	self:HandleCamLock()
+	self:KeyCheckShiftLock()
 end
 
 

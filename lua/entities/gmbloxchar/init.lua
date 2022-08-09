@@ -5,6 +5,7 @@ AddCSLuaFile("cl_gear.lua")
 AddCSLuaFile("cl_ui.lua")
 AddCSLuaFile("cl_menu.lua")
 AddCSLuaFile("cl_net.lua")
+AddCSLuaFile("cl_shiftlock.lua")
 
 include("shared.lua")
 include("sv_physics.lua")
