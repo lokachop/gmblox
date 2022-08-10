@@ -60,6 +60,23 @@ local function makeGearPanel(name, parent)
 end
 
 local function saveCurrentSelected(tbl, name)
+	if name == "" then
+		return
+	end
+
+	-- sanitize name
+	name = string.gsub(name, " ", "_")
+	name = string.gsub(name, "<", "_")
+	name = string.gsub(name, ">", "_")
+	name = string.gsub(name, ":", "_")
+	name = string.gsub(name, "\"", "_")
+	name = string.gsub(name, "/", "_")
+	name = string.gsub(name, "\\", "_")
+	name = string.gsub(name, "|", "_")
+	name = string.gsub(name, "?", "_")
+	name = string.gsub(name, "*", "_")
+
+
 	local copytbl = {}
 	local count = 0
 
@@ -184,6 +201,12 @@ local function makeLoadoutPrompt(ent)
 	frameLoadout.panelidf = 0
 	frameLoadout.targetItems = {}
 	frameLoadout.totalTarget = 0
+
+	local dloadout = GetConVar("gmblox_defaultloadout"):GetString()
+	if dloadout and dloadout ~= "none" then
+		loadFromSave(dloadout, frameLoadout)
+	end
+
 
 	local fw, fh = 800 * .75, 600 * .75
 	frameLoadout:SetSize(fw, fh)

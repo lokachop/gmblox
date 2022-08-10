@@ -339,6 +339,15 @@ function ENT:AnimThink(k)
 end
 
 function ENT:Draw()
+	if self.HasGibbed then
+		if not self.HasRemovedCSPostGib then
+			self:RemoveCSModels()
+			self.HasRemovedCSPostGib = true
+		end
+		return
+	end
+
+
 	for k, v in pairs(self.CSModels) do
 		if not IsValid(v) then
 			self:BuildCSModels()
@@ -427,6 +436,34 @@ function ENT:MakeHooks()
 end
 
 
+function ENT:GibOnDeath()
+	if not GetConVar("gmblox_gibondeath"):GetBool() then
+		return
+	end
+
+	if self.HasGibbed then
+		return
+	end
+
+	for k, v in pairs(self.CSModels) do
+		local prop = ents.CreateClientProp(v:GetModel())
+		prop:SetPos(v:GetPos())
+		prop:SetAngles(v:GetAngles())
+		prop:SetColor(v:GetColor())
+		prop:SetMaterial(v:GetMaterial())
+
+		prop:Spawn()
+
+		timer.Simple(4, function()
+			if IsValid(prop) then
+				prop:Remove()
+			end
+		end)
+	end
+
+	self.HasGibbed = true
+end
+
 function ENT:Think()
 	if self.LastGroundState ~= self:GetGrounded() then
 		if self:GetGrounded() == true then
@@ -474,6 +511,10 @@ function ENT:Think()
 
 	self:HandleCamLock()
 	self:KeyCheckShiftLock()
+
+	if self:GetHealthRoblox() <= 0 then
+		self:GibOnDeath()
+	end
 end
 
 
