@@ -36,7 +36,7 @@ hook.Add("PopulateToolMenu", "GMBloxPopulate", function()
 
 	spawnmenu.AddToolMenuOption("Options", "GMBlox", "GMBlox_ConfigServer", "GMBlox server options", "", "", function(dform)
 		dform:ClearControls()
-		dform:Help("Default gear list")
+		dform:Help("Allowed gear list")
 		for k, v in pairs(GMBlox.ValidGears) do
 			local cb = vgui.Create("DCheckBoxLabel")
 			cb:SetText(v.name)
