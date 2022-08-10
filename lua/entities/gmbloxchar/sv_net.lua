@@ -11,6 +11,39 @@ util.AddNetworkString("gmblox_exit_sv")
 util.AddNetworkString("gmblox_changehat")
 util.AddNetworkString("gmblox_changehat_sv")
 
+util.AddNetworkString("gmblox_promptloadout")
+util.AddNetworkString("gmblox_promptloadout_sv")
+
+net.Receive("gmblox_promptloadout_sv", function(len, ply)
+	if (ply.nextLoadout or 0) > CurTime() then
+		return
+	end
+
+	ply.nextLoadout = CurTime() + 1
+
+	local target = net.ReadEntity()
+
+	if not IsValid(target) then
+		return
+	end
+
+	if target:GetClass() ~= "gmbloxchar" then
+		return
+	end
+
+	if target.HasLoadout then
+		return
+	end
+
+	local dist = ply:GetPos():Distance(target:GetPos())
+	if dist > 1024 then
+		return
+	end
+
+	target.HasLoadout = true
+	target:BeginControl(ply)
+end)
+
 
 net.Receive("gmblox_changehat", function(len, ply)
 	if (ply.nextCustomizeHat or 0) > CurTime() then

@@ -57,7 +57,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 			return
 		end
 
-		util.BlastDamage(rocketProp, ent:GetController(), rocketProp:GetPos(), 160, 90)
+		util.BlastDamage(rocketProp, ent:GetController(), rocketProp:GetPos(), 160, 120)
 
 		local effectdata = EffectData()
 		EffectData():SetOrigin(rocketProp:GetPos())

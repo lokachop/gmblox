@@ -1,4 +1,3 @@
-
 local function num2col(num)
 	return Color(bit.band(num, 0xFF), bit.band(bit.rshift(num, 8), 0xFF), bit.band(bit.rshift(num, 16), 0xFF))
 end

@@ -1,6 +1,6 @@
 local GEAR = {}
 GEAR.name = "slingshot" -- name of the gear
-GEAR.desc = "shoot these slings" -- optional
+GEAR.desc = "this weapon SUCKS" -- optional
 GEAR.icon = "gmblox/vgui/Slingshot.png" -- optional
 
 GEAR.model = "models/gmblox/slingshot.mdl"

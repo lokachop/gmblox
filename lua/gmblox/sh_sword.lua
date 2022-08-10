@@ -1,6 +1,6 @@
 local GEAR = {}
 GEAR.name = "sword" -- name of the gear
-GEAR.desc = "swording away" -- optional
+GEAR.desc = "a sword" -- optional
 GEAR.icon = "gmblox/vgui/Sword128.png" -- optional
 
 GEAR.model = "models/gmblox/sword.mdl"

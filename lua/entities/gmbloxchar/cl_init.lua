@@ -4,6 +4,7 @@ include("cl_ui.lua")
 include("cl_menu.lua")
 include("cl_net.lua")
 include("cl_shiftlock.lua")
+include("cl_loadout.lua")
 
 surface.CreateFont("GMBlox_Trebuchet18Bold", {
 	font = "Trebuchet MS",

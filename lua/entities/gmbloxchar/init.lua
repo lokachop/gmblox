@@ -6,6 +6,7 @@ AddCSLuaFile("cl_ui.lua")
 AddCSLuaFile("cl_menu.lua")
 AddCSLuaFile("cl_net.lua")
 AddCSLuaFile("cl_shiftlock.lua")
+AddCSLuaFile("cl_loadout.lua")
 
 include("shared.lua")
 include("sv_physics.lua")
@@ -18,6 +19,14 @@ util.PrecacheModel("models/gmblox/limb.mdl")
 function ENT:UnControl()
 	if not IsValid(self:GetController()) then
 		return
+	end
+
+	if self.PreFlagNoTarget then
+		self:AddFlags(FL_NOTARGET)
+	end
+
+	if self.PreFlagAimTarget then
+		self:AddFlags(FL_AIMTARGET)
 	end
 
 	self:GetController():UnSpectate()
@@ -81,6 +90,8 @@ function ENT:Initialize()
 	self:SetHealthRoblox(100)
 
 	self:AddEFlags(EFL_DONTBLOCKLOS)
+
+	self:SetUseType(SIMPLE_USE)
 end
 
 function ENT:SpawnFunction(ply, tr, classname)
@@ -167,18 +178,37 @@ function ENT:UpdateTransmitState()
 	return TRANSMIT_ALWAYS
 end
 
-function ENT:Use(ply, caller)
-	if not IsValid(self:GetController()) then
-		self:SetController(ply)
 
-		ply:Spectate(OBS_MODE_CHASE)
-		ply:SpectateEntity(self)
-		ply:Flashlight(false)
-		ply:AllowFlashlight(false)
-		ply:StripWeapons()
-		ply:RemoveFlags(FL_NOTARGET)
-		ply:RemoveFlags(FL_AIMTARGET)
+function ENT:BeginControl(ply)
+	if IsValid(self:GetController()) then
+		return
 	end
+
+	self:SetController(ply)
+
+	ply:Spectate(OBS_MODE_CHASE)
+	ply:SpectateEntity(self)
+	ply:Flashlight(false)
+	ply:AllowFlashlight(false)
+	ply:StripWeapons()
+
+	self.PreFlagNoTarget = ply:GetFlags(FL_NOTARGET)
+	self.PreFlagAimTarget = ply:GetFlags(FL_AIMTARGET)
+
+	ply:RemoveFlags(FL_NOTARGET)
+	ply:RemoveFlags(FL_AIMTARGET)
+end
+
+function ENT:Use(ply, caller)
+	if not self.HasLoadout then
+		net.Start("gmblox_promptloadout")
+			net.WriteEntity(self)
+		net.Send(ply)
+		return
+	end
+
+
+	self:BeginControl(ply)
 end
 
 function ENT:OnRemove()
