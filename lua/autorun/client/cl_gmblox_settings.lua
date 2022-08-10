@@ -29,8 +29,9 @@ hook.Add("PopulateToolMenu", "GMBloxPopulate", function()
 
 			combo:AddChoice(nameNoExt)
 		end
+		combo:AddChoice("none")
 
-		dform:Help("GMBlox, by lokachop")
+		dform:Help("GMBlox, by Lokachop")
 	end)
 
 
@@ -60,6 +61,6 @@ hook.Add("PopulateToolMenu", "GMBloxPopulate", function()
 			dform:AddItem(cb)
 		end
 
-		dform:Help("GMBlox, by lokachop")
+		dform:Help("GMBlox, by Lokachop")
 	end)
 end)
