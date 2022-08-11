@@ -78,8 +78,8 @@ end
 GMBlox.DeclareFace("normal", "gmblox/face_background", "gmblox/vgui/smile-background.png")
 GMBlox.DeclareFace(":3", "gmblox/colonthreebackground", "gmblox/vgui/colonthree-background.png")
 GMBlox.DeclareFace("drool", "gmblox/face_drool", "gmblox/vgui/face_drool.png")
-GMBlox.DeclareFace("Manface", "gmblox/face_man", "gmblox/vgui/face_man.png")
-GMBlox.DeclareFace("Palface", "gmblox/face_pal", "gmblox/vgui/face_pal.png")
+GMBlox.DeclareFace("manface", "gmblox/face_man", "gmblox/vgui/face_man.png")
+GMBlox.DeclareFace("palface", "gmblox/face_pal", "gmblox/vgui/face_pal.png")
 
 
 GMBlox.DeclareHat("Lamp Shade", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
