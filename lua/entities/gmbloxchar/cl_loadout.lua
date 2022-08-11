@@ -258,6 +258,38 @@ local function makeLoadoutPrompt(ent)
 	makePanelPresets(ent, presetPanel, frameLoadout)
 end
 
+
+function ENT:LoadLoadoutFromName(name)
+	if not file.Exists("gmblox/gearpresets/" .. name .. ".txt", "DATA") then
+		return
+	end
+
+	local json = file.Read("gmblox/gearpresets/" .. name .. ".txt", "DATA")
+	if not json then
+		return
+	end
+
+	local tbl = util.JSONToTable(json)
+	if not tbl then
+		return
+	end
+
+	self.Inventory = {}
+
+	for k, v in pairs(tbl) do
+		if not GMBlox.ValidGears[v] then
+			continue
+		end
+
+		if not GMBlox.IsAllowedLUT[v] then
+			continue
+		end
+
+		self.Inventory[#self.Inventory + 1] = v
+	end
+end
+
+
 net.Receive("gmblox_promptloadout", function(len)
 	local target = net.ReadEntity()
 

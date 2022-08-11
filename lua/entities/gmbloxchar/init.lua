@@ -201,13 +201,17 @@ function ENT:BeginControl(ply)
 end
 
 function ENT:Use(ply, caller)
+	if ply:GetInfoNum("gmblox_loadoutprompt", 1) == 0 then
+		self:BeginControl(ply)
+		return
+	end
+
 	if not self.HasLoadout then
 		net.Start("gmblox_promptloadout")
 			net.WriteEntity(self)
 		net.Send(ply)
 		return
 	end
-
 
 	self:BeginControl(ply)
 end

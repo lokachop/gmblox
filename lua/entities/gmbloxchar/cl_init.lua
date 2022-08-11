@@ -471,6 +471,21 @@ function ENT:GibOnDeath()
 	self.HasGibbed = true
 end
 
+
+function ENT:SetupOnControl()
+	if GetConVar("gmblox_loadoutprompt"):GetInt() == 0 then
+		self:LoadLoadoutFromName(GetConVar("gmblox_defaultloadout"):GetString())
+	end
+
+
+
+	self:MakeHooks()
+	self:ReBuildGearButtons()
+	self:SendSavedAppearance()
+	self:MakeMenuButton()
+	self:MakeShiftlockButton()
+end
+
 function ENT:Think()
 	if self.LastGroundState ~= self:GetGrounded() then
 		if self:GetGrounded() == true then
@@ -492,12 +507,8 @@ function ENT:Think()
 
 
 	if not self.MadeHooks and IsValid(self:GetController()) and self:GetController() == LocalPlayer() then
+		self:SetupOnControl()
 		self.MadeHooks = true
-		self:MakeHooks()
-		self:ReBuildGearButtons()
-		self:SendSavedAppearance()
-		self:MakeMenuButton()
-		self:MakeShiftlockButton()
 	end
 
 

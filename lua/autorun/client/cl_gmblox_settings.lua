@@ -4,6 +4,7 @@ if CLIENT then
 	CreateClientConVar("gmblox_animwait", 33, true, false, "Animation wait time in milliseconds, lower can make anims less laggy at cost of performance", 0, 500)
 	CreateClientConVar("gmblox_gibremovetime", 4, true, false, "Seconds to wait before removing death gibs", 1, 10)
 	CreateClientConVar("gmblox_defaultloadout", "none", true, false, "Default loadout to have selected")
+	CreateClientConVar("gmblox_loadoutprompt", 1, true, true, "Toggles the loadout prompt", 0, 1)
 end
 
 GMBlox = GMBlox or {}
@@ -18,6 +19,9 @@ hook.Add("PopulateToolMenu", "GMBloxPopulate", function()
 		dform:ClearControls()
 		dform:CheckBox("Draw Scoreboard", "gmblox_drawscoreboard")
 		dform:CheckBox("Gib upon death", "gmblox_gibondeath")
+		dform:CheckBox("Prompt for loadout", "gmblox_loadoutprompt")
+
+
 		local formc = dform:NumSlider("Animation Wait (ms)", "gmblox_animwait", 0, 500, 0)
 		formc:SetValue(GetConVar("gmblox_animwait"):GetFloat())
 
