@@ -182,6 +182,15 @@ function ENT:AnimThink(k)
 end
 
 function ENT:Draw()
+	if self.HasGibbed then
+		if not self.HasRemovedCSPostGib then
+			self:RemoveCSModels()
+			self.HasRemovedCSPostGib = true
+		end
+		return
+	end
+
+
 	for k, v in pairs(self.CSModels) do
 		if not IsValid(v) then
 			self:BuildCSModels()
@@ -190,6 +199,43 @@ function ENT:Draw()
 
 		v:CreateShadow()
 	end
+end
+
+
+function ENT:GibOnDeath()
+	if not GetConVar("gmblox_gibondeath"):GetBool() then
+		return
+	end
+
+	if self.HasGibbed then
+		return
+	end
+
+	for k, v in pairs(self.CSModels) do
+		local prop = ents.CreateClientProp(v:GetModel())
+		prop:SetPos(v:GetPos())
+		prop:SetAngles(v:GetAngles())
+		prop:SetColor(v:GetColor())
+		prop:SetMaterial(v:GetMaterial())
+
+		prop:Spawn()
+
+
+		local wait = 4
+		local cv = GetConVar("gmblox_gibremovetime")
+
+		if cv then
+			wait = cv:GetInt()
+		end
+
+		timer.Simple(wait, function()
+			if IsValid(prop) then
+				prop:Remove()
+			end
+		end)
+	end
+
+	self.HasGibbed = true
 end
 
 function ENT:Think()
@@ -214,6 +260,10 @@ function ENT:Think()
 	self.LastAnim = SysTime()
 
 	self.NextAnim = CurTime() + ((GetConVar("gmblox_animwait"):GetInt() / 1000) * 2)
+
+	if self:GetHealthRoblox() <= 0 then
+		self:GibOnDeath()
+	end
 end
 
 function ENT:OnRemove()
