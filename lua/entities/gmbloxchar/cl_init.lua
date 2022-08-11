@@ -454,7 +454,15 @@ function ENT:GibOnDeath()
 
 		prop:Spawn()
 
-		timer.Simple(4, function()
+
+		local wait = 4
+		local cv = GetConVar("gmblox_gibremovetime")
+
+		if cv then
+			wait = cv:GetInt()
+		end
+
+		timer.Simple(wait, function()
 			if IsValid(prop) then
 				prop:Remove()
 			end

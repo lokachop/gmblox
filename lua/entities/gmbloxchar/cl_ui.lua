@@ -65,6 +65,8 @@ function ENT:ReBuildGearButtons()
 end
 
 
+
+local f_icon = Material("gmblox/vgui/PlayerlistFriendIcon.png", "nocull ignorez smooth mips")
 function ENT:RenderScoreboard()
 	if not GetConVar("gmblox_drawscoreboard") then
 		return
@@ -102,7 +104,17 @@ function ENT:RenderScoreboard()
 			surface.SetDrawColor(grmod, grmod, grmod, 128)
 			surface.DrawRect(ScrW() - sw * 1.05, curr_y, sw, 24)
 
-			draw.SimpleText(v2:GetName(), "GMBlox_Trebuchet18", ScrW() - sw * 1.05, curr_y + 2, Color(v.Color.r, v.Color.g, v.Color.b), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+			local off_add = 0
+			local friendStatus = v2:GetFriendStatus()
+			if friendStatus == "friend" then
+				surface.SetDrawColor(255, 255, 255, 255)
+				surface.SetMaterial(f_icon)
+
+				surface.DrawTexturedRect(ScrW() - sw * 1.05, curr_y, 24, 24)
+				off_add = 24
+			end
+
+			draw.SimpleText(v2:GetName(), "GMBlox_Trebuchet18", (ScrW() - sw * 1.05) + off_add, curr_y + 2, Color(v.Color.r, v.Color.g, v.Color.b), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
 			local kills = v2:Frags()
 			teamFrags = teamFrags + kills

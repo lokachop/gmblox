@@ -14,7 +14,7 @@ local function makeGearPanel(name, parent)
 	local iteminfo = GMBlox.ValidGears[name]
 
 	local copy_lidf = parent.panelidf
-	local iconmat = Material(iteminfo.icon, "nocull ignorez alphatest smooth")
+	local iconmat = Material(iteminfo.icon, "nocull ignorez smooth")
 	function basebtn:Paint(w, h)
 		local mod = (copy_lidf % 2) == 1
 		local col = (parent.targetItems[name] ~= true) and (mod and c_base or c_brght) or (mod and c_checked or c_checked_brght)
