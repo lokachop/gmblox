@@ -347,7 +347,6 @@ function ENT:Draw()
 		return
 	end
 
-
 	for k, v in pairs(self.CSModels) do
 		if not IsValid(v) then
 			self:BuildCSModels()

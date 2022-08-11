@@ -216,10 +216,11 @@ function ENT:GibOnDeath()
 		prop:SetPos(v:GetPos())
 		prop:SetAngles(v:GetAngles())
 		prop:SetColor(v:GetColor())
-		prop:SetMaterial(v:GetMaterial())
-
 		prop:Spawn()
 
+		if v:GetMaterials()[1] == "gmblox/face_background" then
+			prop:SetMaterial("gmblox/face_drool")
+		end
 
 		local wait = 4
 		local cv = GetConVar("gmblox_gibremovetime")
