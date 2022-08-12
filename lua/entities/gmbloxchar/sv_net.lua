@@ -69,21 +69,8 @@ net.Receive("gmblox_changehat", function(len, ply)
 		return
 	end
 
-	local hat = net.ReadString()
-
-	if not hat then
-		return
-	end
-
-	if hat == "None" then
-		return
-	end
-
-	local face = net.ReadString()
-
-	if not face then
-		return
-	end
+	local hat = net.ReadString() or "None"
+	local face = net.ReadString() or "normal"
 
 
 	net.Start("gmblox_changehat_sv")

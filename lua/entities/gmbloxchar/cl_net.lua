@@ -37,7 +37,6 @@ net.Receive("gmblox_changehat_sv", function()
 	local hat = net.ReadString()
 	local face = net.ReadString()
 
-	target.ActiveFace = face
 
 	local ro = target.RenderObjects
 	if not ro then
@@ -48,6 +47,7 @@ net.Receive("gmblox_changehat_sv", function()
 		return
 	end
 
+	target.ActiveFace = face or "normal"
 	ro["head"].mat = target.Faces[face].mat
 	target.ActiveHat = hat or "None"
 
