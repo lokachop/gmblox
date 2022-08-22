@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	$basetexture "models/roblox_assets/kitty_ears/kitty_ears"
+	$color2 "{255 255 255}"
+}

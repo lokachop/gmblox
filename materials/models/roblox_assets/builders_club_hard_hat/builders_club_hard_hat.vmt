@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	$basetexture "models/roblox_assets/builders_club_hard_hat/builders_club_hard_hat"
+	$color2 "{255 255 255}"
+}

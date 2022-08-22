@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	$basetexture "models/roblox_assets/shaggy/shaggy"
+	$color2 "{255 255 255}"
+}

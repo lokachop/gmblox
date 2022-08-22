@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	$basetexture "models/roblox_assets/bloxxer_cap/bloxxer_cap"
+	$color2 "{255 255 255}"
+}
