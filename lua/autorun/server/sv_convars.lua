@@ -22,8 +22,6 @@ function GMBlox.GetAllowedGearsFromFile()
         end
     end
 
-
-    PrintTable(alltbl)
     return alltbl
 end
 
@@ -33,7 +31,6 @@ function GMBlox.RebuildDefaultInventory()
 
     GMBlox.DefaultInventory = {}
     for k, v in pairs(alltbl) do
-        print(v)
         if v == true then
             GMBlox.DefaultInventory[#GMBlox.DefaultInventory + 1] = k
         end
