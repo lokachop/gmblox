@@ -101,7 +101,7 @@ function ENT:Initialize()
 
 	self.RenderObjects = {
 		["head"] = {
-			pos = Vector(-17.5, 0, 0),
+			pos = Vector(-18.5, 0, 0),
 			ang = Angle(-90, 0, 0),
 			model = "models/gmblox/head.mdl",
 			mat = self.Faces[self.ActiveFace].mat,
@@ -267,7 +267,7 @@ function ENT:RebuildActiveHat()
 	end
 
 	self.HatCSModel = ClientsideModel(hatinf.model, RENDERGROUP_OPAQUE)
-	local offpos = hatinf.posOffset + Vector(-24, 0, 0)
+	local offpos = hatinf.posOffset + Vector(-25, 0, 0)
 	local offang = hatinf.angleOffset + Angle(90, 0, 0)
 
 	if hatinf.scale then
@@ -370,7 +370,7 @@ function ENT:MakeHooks()
 		local addShLock = (self.ShLockOn and self.ZmMult > 0) and self:GetRight() * 20 or self:GetRight() * 0
 
 		local tr = util.TraceLine({
-			start = self:GetPos() + Vector(0, 0, 16) + addShLock,
+			start = self:GetPos() + Vector(0, 0, 18) + addShLock,
 			endpos = (self:GetPos() - (ang:Forward() * 100) * self.ZmMult) + self:GetForward() * -20 + addShLock,
 			filter = self
 		})

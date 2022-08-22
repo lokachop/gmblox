@@ -1,14 +1,13 @@
 GMBlox = GMBlox or {}
 
-function GMBlox.RebuildDefaultInventory()
+function GMBlox.GetAllowedGearsFromFile()
     local allowed = file.Read("gmblox_allowed_gears.txt", "DATA")
-    if not allowed then
-        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true}]]
-    end
-
-    local alltbl = util.JSONToTable(allowed)
+    local alltbl = allowed and util.JSONToTable(allowed)
     if not alltbl then
         alltbl = {}
+        for k, v in pairs(GMBlox.ValidGears) do
+            alltbl[k] = true
+        end
     end
 
     for k, v in pairs(alltbl) do
@@ -17,30 +16,34 @@ function GMBlox.RebuildDefaultInventory()
         end
     end
 
+    for k, v in pairs(GMBlox.ValidGears) do
+        if alltbl[k] == nil then
+            alltbl[k] = true
+        end
+    end
+
+
+    PrintTable(alltbl)
+    return alltbl
+end
+
+
+function GMBlox.RebuildDefaultInventory()
+    local alltbl = GMBlox.GetAllowedGearsFromFile()
+
     GMBlox.DefaultInventory = {}
     for k, v in pairs(alltbl) do
-        GMBlox.DefaultInventory[#GMBlox.DefaultInventory + 1] = k
+        print(v)
+        if v == true then
+            GMBlox.DefaultInventory[#GMBlox.DefaultInventory + 1] = k
+        end
     end
     GMBlox.RebuildIsAllowedLUT()
 end
 
 
 function GMBlox.AddGearToSave(name)
-    local allowed = file.Read("gmblox_allowed_gears.txt", "DATA")
-    if not allowed then
-        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true, "sword":true}]]
-    end
-
-    local alltbl = util.JSONToTable(allowed)
-    if not alltbl then
-        alltbl = {}
-    end
-
-    for k, v in pairs(alltbl) do
-        if not GMBlox.ValidGears[k] then
-            alltbl[k] = nil
-        end
-    end
+    local alltbl = GMBlox.GetAllowedGearsFromFile()
 
     alltbl[name] = true
     file.Write("gmblox_allowed_gears.txt", util.TableToJSON(alltbl))
@@ -49,24 +52,10 @@ function GMBlox.AddGearToSave(name)
 end
 
 function GMBlox.RemoveGearFromSave(name)
-    local allowed = file.Read("gmblox_allowed_gears.txt", "DATA")
-    if not allowed then
-        allowed = [[{"superball":true,"paintball":true,"bloxycola":true,"cheezburger":true,"rocketlauncher":true,"pizza":true,"slingshot":true, "sword":true}]]
-    end
+    local alltbl = GMBlox.GetAllowedGearsFromFile()
 
-    local alltbl = util.JSONToTable(allowed)
-    if not alltbl then
-        alltbl = {}
-    end
-
-    for k, v in pairs(alltbl) do
-        if not GMBlox.ValidGears[k] then
-            alltbl[k] = nil
-        end
-    end
-
-    if alltbl[name] then
-        alltbl[name] = nil
+    if alltbl[name] == true then
+        alltbl[name] = false
         file.Write("gmblox_allowed_gears.txt", util.TableToJSON(alltbl))
     end
 

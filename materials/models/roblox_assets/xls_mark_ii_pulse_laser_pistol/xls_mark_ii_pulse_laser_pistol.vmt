@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	$basetexture "models/roblox_assets/xls_mark_ii_pulse_laser_pistol/xls_mark_ii_pulse_laser_pistol"
+	$color2 "{255 255 255}"
+}

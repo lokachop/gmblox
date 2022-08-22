@@ -243,13 +243,15 @@ function ENT:MakeCreditsMenu()
 		h = self.creditsMenu:GetTall(),
 	}
 
-	makeCreditAndReason(self.creditsMenu, "opiper", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198885421847/")
-	makeCreditAndReason(self.creditsMenu, "sweepy", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198277636412")
-	makeCreditAndReason(self.creditsMenu, "Swedish Swede", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198260232820")
-	makeCreditAndReason(self.creditsMenu, "Lord_Arcness", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198118355002")
-	makeCreditAndReason(self.creditsMenu, "MISTER BONES", "Bugtesting, Awesome friend", "https://steamcommunity.com/profiles/76561198056452663")
+	makeCreditAndReason(self.creditsMenu, "opiper", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198885421847/")
+	makeCreditAndReason(self.creditsMenu, "sweepy", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198277636412")
+	makeCreditAndReason(self.creditsMenu, "Swedish Swede", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198260232820")
+	makeCreditAndReason(self.creditsMenu, "Lord_Arcness", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198118355002")
+	makeCreditAndReason(self.creditsMenu, "MISTER BONES", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198056452663")
+	makeCreditAndReason(self.creditsMenu, "Hybird", "Help with sounds, textures and fixes", "https://steamcommunity.com/profiles/76561199160976480")
 	makeCreditAndReason(self.creditsMenu, "ROBLOX", "Original Game", "https://www.roblox.com/")
 	makeCreditAndReason(self.creditsMenu, "GMPublisher", "Used for publishing to the workshop", "https://github.com/WilliamVenner/gmpublisher")
+	makeCreditAndReason(self.creditsMenu, "Rbx2Source", "Used to convert roblox assets to source", "https://github.com/MaximumADHD/Rbx2Source")
 
 	-- and most importantly
 	makeCreditAndReason(self.creditsMenu, LocalPlayer():GetName(), "Downloading and using the addon", "https://steamcommunity.com/profiles/" .. LocalPlayer():SteamID64())

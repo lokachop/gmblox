@@ -204,7 +204,7 @@ function ENT:PlayerHandleMovement(tr)
 	end
 
 
-	local vcalc = (totalVel * 120) * self.WalkSpeedMult
+	local vcalc = (totalVel * 180) * self.WalkSpeedMult
 	phys:SetVelocity(Vector(evel.x + vcalc.x, evel.y + vcalc.y, evel.z + phys:GetVelocity().z))
 
 
@@ -226,7 +226,7 @@ function ENT:PlayerHandleMovement(tr)
 		end
 
 
-		phys:ApplyForceCenter(Vector(0, 0, 110000 * self.JumpPowerMult))
+		phys:ApplyForceCenter(Vector(0, 0, 132000 * self.JumpPowerMult))
 		self.NextJump = CurTime() + 0.25
 		self.HasJumped = true
 		self:EmitSound("gmblox/jump.wav")

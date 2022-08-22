@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+	$basetexture gmblox\face_xd
+	$translucent "1"
+	$vertexcolor "1"
+	$model "1"
+}

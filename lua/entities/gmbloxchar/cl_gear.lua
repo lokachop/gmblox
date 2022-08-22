@@ -18,8 +18,15 @@ function ENT:RebuildActiveGear()
 	local offpos = gearData.modelOffset + Vector(-6, 18, 16) + self:GetGearOffset()
 	local offang = gearData.angleOffset + self:GetGearAngle()
 	local offmat = gearData.material
+	local offscl = gearData.scale
 
 	self.GearCSModel = ClientsideModel(mdl, RENDERGROUP_OPAQUE)
+
+	if offscl then
+		local mat = Matrix()
+		mat:Scale(offscl)
+		self.GearCSModel:EnableMatrix("RenderMultiply", mat)
+	end
 
 	if offmat ~= "" then
 		self.GearCSModel:SetMaterial(offmat)

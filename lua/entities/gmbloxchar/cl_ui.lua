@@ -10,7 +10,7 @@ function ENT:ReBuildGearButtons()
 
 
 	local center = ScrW() / 2
-	local y = ScrH() * .9
+	local y = (ScrH() - 64) - (18 * 2)
 
 
 	local gearNum = 0
@@ -79,7 +79,7 @@ function ENT:RenderScoreboard()
 
 	surface.SetDrawColor(0, 0, 0, 128)
 
-	local sw = ScrW() * .2
+	local sw = 384
 	local sh = 32
 	surface.DrawRect(ScrW() - sw * 1.05, sh * 0.95, sw, sh)
 

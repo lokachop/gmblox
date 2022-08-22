@@ -56,7 +56,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 
 	local paintBall_phys = paintBall:GetPhysicsObject()
 	if not IsValid(paintBall_phys) then
-		slingshotBall:Remove()
+		paintBall:Remove()
 		return
 	end
 	paintBall_phys:SetMass(1)

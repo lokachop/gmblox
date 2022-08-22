@@ -82,6 +82,14 @@ GMBlox.DeclareFace("manface", "gmblox/face_man", "gmblox/vgui/face_man.png")
 GMBlox.DeclareFace("palface", "gmblox/face_pal", "gmblox/vgui/face_pal.png")
 GMBlox.DeclareFace("stare", "gmblox/face_stare", "gmblox/vgui/face_stare.png")
 
+-- new update, new faces :D
+GMBlox.DeclareFace(":D", "gmblox/face_d", "gmblox/vgui/face_d.png")
+GMBlox.DeclareFace("sad", "gmblox/face_sad", "gmblox/vgui/face_sad.png")
+GMBlox.DeclareFace("retro smiley", "gmblox/face_retrosmiley", "gmblox/vgui/face_retrosmiley.png")
+GMBlox.DeclareFace("XD", "gmblox/face_xd", "gmblox/vgui/face_xd.png")
+GMBlox.DeclareFace("fearless", "gmblox/face_fearless", "gmblox/vgui/face_fearless.png")
+GMBlox.DeclareFace("finn mccool", "gmblox/face_finn", "gmblox/vgui/face_finn.png")
+
 
 GMBlox.DeclareHat("Lamp Shade", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
 GMBlox.DeclareHat("Cone", "models/props_junk/TrafficCone001a.mdl", Vector(-14.4, 0, 0), Angle(0, 0, 0))
