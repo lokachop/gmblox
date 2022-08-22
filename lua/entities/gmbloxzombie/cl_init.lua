@@ -47,7 +47,7 @@ function ENT:Initialize()
 	self.RenderObjects = {
 		["head"] = {
 			pos = Vector(-18.5, 0, 0),
-			ang = Angle(-90, 0, 0),
+			ang = Angle(-90, 0, -3), -- fix bad uvs by me :(
 			model = "models/gmblox/head.mdl",
 			mat = "gmblox/face_drool",
 			col = Color(143, 175, 124),
