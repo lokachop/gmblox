@@ -97,7 +97,7 @@ GMBlox.DeclareHat("Pot", "models/props_interiors/pot02a.mdl", Vector(-0, 6.9, -6
 GMBlox.DeclareHat("Tophat", "models/player/items/humans/top_hat.mdl", Vector(8.65, 0, 0), Angle(0, 0, 0), Vector(1.5, 1.75, 1.75))
 
 -- from roblox
-GMBlox.DeclareHat("Astronaut Helmet", "models/roblox_assets/astronaut_helmet.mdl", Vector(3.6, 0, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
+GMBlox.DeclareHat("Astronaut Helmet", "models/roblox_assets/astronaut_helmet.mdl", Vector(2.4, 0, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 GMBlox.DeclareHat("BC Hardhat", "models/roblox_assets/builders_club_hard_hat.mdl", Vector(-2.75, 0, 1), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 GMBlox.DeclareHat("Doge", "models/roblox_assets/doge.mdl", Vector(5, 0, 3), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 GMBlox.DeclareHat("Bloxxer Cap", "models/roblox_assets/bloxxer_cap.mdl", Vector(1, 0, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
