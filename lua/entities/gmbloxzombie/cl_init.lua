@@ -46,7 +46,7 @@ function ENT:Initialize()
 
 	self.RenderObjects = {
 		["head"] = {
-			pos = Vector(-17.5, 0, 0),
+			pos = Vector(-18.5, 0, 0),
 			ang = Angle(-90, 0, 0),
 			model = "models/gmblox/head.mdl",
 			mat = "gmblox/face_drool",
