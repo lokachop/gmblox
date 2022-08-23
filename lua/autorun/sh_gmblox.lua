@@ -91,10 +91,10 @@ GMBlox.DeclareFace("fearless", "gmblox/face_fearless", "gmblox/vgui/face_fearles
 GMBlox.DeclareFace("finn mccool", "gmblox/face_finn", "gmblox/vgui/face_finn.png")
 
 
-GMBlox.DeclareHat("Lamp Shade", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
-GMBlox.DeclareHat("Cone", "models/props_junk/TrafficCone001a.mdl", Vector(-14.4, 0, 0), Angle(0, 0, 0))
-GMBlox.DeclareHat("Pot", "models/props_interiors/pot02a.mdl", Vector(-0, 6.9, -6.9), Angle(180, 0, 45), Vector(1.75, 1.75, 1.75))
-GMBlox.DeclareHat("Tophat", "models/player/items/humans/top_hat.mdl", Vector(8.65, 0, 0), Angle(0, 0, 0), Vector(1.5, 1.75, 1.75))
+GMBlox.DeclareHat("HL2 Lamp Shade", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))
+GMBlox.DeclareHat("HL2 Cone", "models/props_junk/TrafficCone001a.mdl", Vector(-14.4, 0, 0), Angle(0, 0, 0))
+GMBlox.DeclareHat("HL2 Pot", "models/props_interiors/pot02a.mdl", Vector(-0, 6.9, -6.9), Angle(180, 0, 45), Vector(1.75, 1.75, 1.75))
+GMBlox.DeclareHat("HL2 Tophat", "models/player/items/humans/top_hat.mdl", Vector(8.65, 0, 0), Angle(0, 0, 0), Vector(1.5, 1.75, 1.75))
 
 -- from roblox
 GMBlox.DeclareHat("Astronaut Helmet", "models/roblox_assets/astronaut_helmet.mdl", Vector(2.4, 0, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
