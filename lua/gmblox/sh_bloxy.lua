@@ -33,6 +33,9 @@ end
 GEAR.svFinishedCallback = function(ent)
 	ent:SetGearOffset(Vector(0, 0, 0))
 	ent:SetGearAngle(Angle(0, 0, 0))
+
+	local currHP = ent:GetHealthRoblox()
+	ent:SetHealthRoblox(math.Clamp(currHP + 25, 0, 100))
 end
 
 
