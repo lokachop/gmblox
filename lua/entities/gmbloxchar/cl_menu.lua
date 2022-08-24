@@ -2,6 +2,50 @@ local function col2num(r, g, b)
 	return r + bit.lshift(g, 8) + bit.lshift(b, 16)
 end
 
+local uvPartLUT = {
+	["torso"] = {
+		x = 231,
+		y = 74,
+		w = 128,
+		h = 128
+	},
+	["leftarm"] = {
+		x = 308,
+		y = 355,
+		w = 64,
+		h = 128
+	},
+	["rightarm"] = {
+		x = 217,
+		y = 355,
+		w = 64,
+		h = 128
+	},
+	["leftleg"] = {
+		x = 308,
+		y = 355,
+		w = 64,
+		h = 128
+	},
+	["rightleg"] = {
+		x = 217,
+		y = 355,
+		w = 64,
+		h = 128
+	}
+}
+
+local applyLUTShirt = {
+	["torso"] = true,
+	["leftarm"] = true,
+	["rightarm"] = true,
+}
+
+local applyLUTPants = {
+	["torso"] = true,
+	["leftleg"] = true,
+	["rightleg"] = true,
+}
 
 function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 	local buttonpart = vgui.Create("DButton", self.customizeMenu)
@@ -17,6 +61,8 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 
 		surface.SetDrawColor(cref.col.r, cref.col.g, cref.col.b)
 		surface.DrawRect(2, 2, w2 - 4, h2 - 4)
+
+
 		if cref.name == "head" then
 			if not self.matFaces then
 				self.matFaces = {}
@@ -27,6 +73,81 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 			end
 			surface.SetDrawColor(255, 255, 255, 255)
 			surface.SetMaterial(self.matFaces[e_ref.ActiveFace])
+			surface.DrawTexturedRect(2, 2, w2 - 4, h2 - 4)
+			return
+		end
+
+		if applyLUTPants[cref.name] then
+			local uvDat = uvPartLUT[cref.name]
+			if not uvDat then
+				return
+			end
+
+			if e_ref.ActivePants == "none" then
+				return
+			end
+
+			if GMBlox.ValidPants[e_ref.ActivePants] == nil then
+				return
+			end
+
+			local mat = Material(GMBlox.ValidPants[e_ref.ActivePants], "ignorez nocull smooth")
+			local szRatW = mat:Width() / 585
+			local szRatH = mat:Height() / 559
+
+			local u0 = (uvDat.x * szRatW) / (585 * szRatW)
+			local v0 = (uvDat.y * szRatH) / (559 * szRatH)
+
+			local u1 = ((uvDat.x + uvDat.w) * szRatW) / (585 * szRatW)
+			local v1 = ((uvDat.y + uvDat.h) * szRatH) / (559 * szRatH)
+
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.SetMaterial(mat)
+			surface.DrawTexturedRectUV(2, 2, w2 - 4, h2 - 4, u0, v0, u1, v1)
+		end
+
+		if applyLUTShirt[cref.name] then
+			local uvDat = uvPartLUT[cref.name]
+			if not uvDat then
+				return
+			end
+
+			if e_ref.ActiveShirt == "none" then
+				return
+			end
+
+			if GMBlox.ValidShirts[e_ref.ActiveShirt] == nil then
+				return
+			end
+
+			local mat = Material(GMBlox.ValidShirts[e_ref.ActiveShirt], "ignorez nocull smooth")
+			local szRatW = mat:Width() / 585
+			local szRatH = mat:Height() / 559
+			print(szRatW, szRatH)
+
+			local u0 = (uvDat.x * szRatW) / (585 * szRatW)
+			local v0 = (uvDat.y * szRatH) / (559 * szRatH)
+
+			local u1 = ((uvDat.x + uvDat.w) * szRatW) / (585 * szRatW)
+			local v1 = ((uvDat.y + uvDat.h) * szRatH) / (559 * szRatH)
+
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.SetMaterial(mat)
+			surface.DrawTexturedRectUV(2, 2, w2 - 4, h2 - 4, u0, v0, u1, v1)
+		end
+
+
+		if cref.name == "torso" then
+			if e_ref.ActiveTShirt == "none" then
+				return
+			end
+
+			if GMBlox.ValidTShirts[e_ref.ActiveTShirt] == nil then
+				return
+			end
+			local mat = Material(GMBlox.ValidTShirts[e_ref.ActiveTShirt], "ignorez nocull smooth")
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.SetMaterial(mat)
 			surface.DrawTexturedRect(2, 2, w2 - 4, h2 - 4)
 		end
 	end
