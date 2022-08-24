@@ -16,7 +16,12 @@ include("sv_net.lua")
 util.PrecacheModel("models/gmblox/head.mdl")
 util.PrecacheModel("models/gmblox/torso.mdl")
 util.PrecacheModel("models/gmblox/limb.mdl")
+util.PrecacheModel("models/gmblox/limb_left.mdl")
+util.PrecacheModel("models/gmblox/limb_right.mdl")
+
 util.PrecacheModel("models/gmblox/limbarm.mdl")
+util.PrecacheModel("models/gmblox/limbarm_left.mdl")
+util.PrecacheModel("models/gmblox/limbarm_right.mdl")
 
 function ENT:UnControl()
 	if not IsValid(self:GetController()) then

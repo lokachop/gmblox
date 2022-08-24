@@ -452,7 +452,7 @@ function ENT:GibOnDeath()
 		local prop = ents.CreateClientProp(v:GetModel())
 		prop:SetPos(v:GetPos())
 		prop:SetAngles(v:GetAngles())
-		prop:SetColor(v:GetColor())
+		prop:SetColor(self.RenderObjects[k].col)
 		prop:SetMaterial(v:GetMaterial())
 
 		prop:Spawn()
