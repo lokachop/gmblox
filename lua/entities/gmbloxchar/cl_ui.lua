@@ -37,7 +37,7 @@ function ENT:ReBuildGearButtons()
 
 			surface.SetDrawColor(64, 64, 64, 255)
 
-			if IsValid(e_self:GetActiveGear()) and v == e_self:GetActiveGear() then
+			if v == e_self:GetActiveGear() then
 				surface.SetDrawColor(255, 0, 0, 255)
 			end
 			surface.DrawRect(0, 0, w, h)

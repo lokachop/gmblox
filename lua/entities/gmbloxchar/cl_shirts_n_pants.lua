@@ -127,7 +127,7 @@ function ENT:RePaintRT()
 
 		if self.ActivePants and self.ActivePants ~= "none" then
 			surface.SetDrawColor(255, 255, 255)
-			surface.SetMaterial(Material(GMBlox.ValidPants[self.ActivePants], "ignorez nocull alphatest smooth"))
+			surface.SetMaterial(Material(GMBlox.ValidPants[self.ActivePants], "ignorez nocull smooth"))
 			surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
 		end
 
@@ -144,7 +144,7 @@ function ENT:RePaintRT()
 
 		if self.ActiveShirt and self.ActiveShirt ~= "none" then
 			surface.SetDrawColor(255, 255, 255)
-			surface.SetMaterial(Material(GMBlox.ValidShirts[self.ActiveShirt], "ignorez nocull alphatest smooth"))
+			surface.SetMaterial(Material(GMBlox.ValidShirts[self.ActiveShirt], "ignorez nocull smooth"))
 			surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
 		end
 	end)
