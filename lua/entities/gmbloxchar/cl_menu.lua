@@ -126,8 +126,13 @@ function ENT:MakeCustomizeMenu()
 	ctemp = self:MakeComboSelect(offx + 300, offy + 220 - 10, "ActiveShirt", GMBlox.ValidShirts)
 	ctemp:AddChoice("none")
 
-	ctemp = self:MakeComboSelect(offx + 300, offy + 240 - 10, "ActivePants", GMBlox.ValidPants)
+	ctemp = self:MakeComboSelect(offx + 300, offy + 240 - 10, "ActiveTShirt", GMBlox.ValidTShirts)
 	ctemp:AddChoice("none")
+
+	ctemp = self:MakeComboSelect(offx + 300, offy + 260 - 10, "ActivePants", GMBlox.ValidPants)
+	ctemp:AddChoice("none")
+
+
 
 	function self.customizeMenu:OnClose()
 		if not IsValid(e_ref) then
@@ -158,7 +163,8 @@ function ENT:MakeCustomizeMenu()
 			hat = e_ref.ActiveHat,
 			face = e_ref.ActiveFace,
 			shirt = e_ref.ActiveShirt,
-			pants = e_ref.ActivePants
+			pants = e_ref.ActivePants,
+			tshirt = e_ref.ActiveTShirt
 		}
 
 		cookie.Set("gmblox_col", util.TableToJSON(coltbl))
@@ -247,9 +253,12 @@ function ENT:MakeCreditsMenu()
 	makeCreditAndReason(self.creditsMenu, "Lord_Arcness", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198118355002")
 	makeCreditAndReason(self.creditsMenu, "MISTER BONES", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198056452663")
 	makeCreditAndReason(self.creditsMenu, "Hybird", "Help with sounds, textures, gears and fixes", "https://steamcommunity.com/profiles/76561199160976480")
+	makeCreditAndReason(self.creditsMenu, "ToxicOrSomething", "Bugtesting, models and textures", "https://steamcommunity.com/profiles/76561198048575789")
 	makeCreditAndReason(self.creditsMenu, "ROBLOX", "Original Game", "https://www.roblox.com/")
 	makeCreditAndReason(self.creditsMenu, "GMPublisher", "Used for publishing to the workshop", "https://github.com/WilliamVenner/gmpublisher")
 	makeCreditAndReason(self.creditsMenu, "Rbx2Source", "Used to convert roblox assets to source", "https://github.com/MaximumADHD/Rbx2Source")
+
+	--https://steamcommunity.com/id/you_suck_balls/
 
 	-- and most importantly
 	makeCreditAndReason(self.creditsMenu, LocalPlayer():GetName(), "Downloading and using the addon", "https://steamcommunity.com/profiles/" .. LocalPlayer():SteamID64())

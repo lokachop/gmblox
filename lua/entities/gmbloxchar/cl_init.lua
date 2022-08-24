@@ -100,6 +100,7 @@ function ENT:Initialize()
 	self.ActiveHat = "None"
 	self.ActiveFace = "normal"
 	self.ActiveShirt = "none"
+	self.ActiveTShirt = "none"
 	self.ActivePants = "none"
 
 	self.RenderObjects = {

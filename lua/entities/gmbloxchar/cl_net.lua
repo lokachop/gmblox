@@ -40,6 +40,7 @@ net.Receive("gmblox_changehat_sv", function()
 
 	local shirt = net.ReadString()
 	local pants = net.ReadString()
+	local tshirt = net.ReadString()
 
 
 	local ro = target.RenderObjects
@@ -57,6 +58,7 @@ net.Receive("gmblox_changehat_sv", function()
 
 	target.ActiveShirt = GMBlox.ValidShirts[shirt] ~= nil and shirt or "none"
 	target.ActivePants = GMBlox.ValidPants[pants] ~= nil and pants or "none"
+	target.ActiveTShirt = GMBlox.ValidTShirts[tshirt] ~= nil and tshirt or "none"
 
 	target:BuildCSModels()
 	target:RePaintRT()
@@ -115,5 +117,6 @@ function ENT:SendSavedAppearance()
 		net.WriteString(prop.face or "normal")
 		net.WriteString(prop.shirt or "none")
 		net.WriteString(prop.pants or "none")
+		net.WriteString(prop.tshirt or "none")
 	net.SendToServer()
 end

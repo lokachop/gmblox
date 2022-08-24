@@ -76,6 +76,12 @@ function GMBlox.DeclareShirt(name, mat)
 	GMBlox.ValidShirts[name] = mat
 end
 
+GMBlox.ValidTShirts = {}
+function GMBlox.DeclareTShirt(name, mat)
+	GMBlox.ValidTShirts[name] = mat
+end
+
+
 GMBlox.ValidPants = {}
 function GMBlox.DeclarePants(name, mat)
 	GMBlox.ValidPants[name] = mat
@@ -86,11 +92,40 @@ GMBlox.DeclareShirt("Stanford Shirt", "gmblox/shirt/stanford.png")
 GMBlox.DeclareShirt("White Plaid Shirt", "gmblox/shirt/whiteplaid.png")
 GMBlox.DeclareShirt("I <3 Chicken", "gmblox/shirt/chickenshirt.png")
 GMBlox.DeclareShirt("Epic Shirt", "gmblox/shirt/epic_shirt.png")
+GMBlox.DeclareShirt("Guest Shirt", "gmblox/shirt/guest_shirt.png")
+GMBlox.DeclareShirt("Summertime Hoodie", "gmblox/shirt/summertime_hoodie.png")
+GMBlox.DeclareShirt("Spaceman Suit", "gmblox/shirt/spaceman_suit.png")
+GMBlox.DeclareShirt("Mad Murderer Hoodie", "gmblox/shirt/mad_murderer_hoodie.png")
+GMBlox.DeclareShirt("Racing Jacket", "gmblox/shirt/racing_helmet_jacket.png")
+GMBlox.DeclareShirt("Knight Shirt", "gmblox/shirt/knight_shirt.png")
+
+
 
 GMBlox.DeclarePants("Battle Pants of Awesomeness", "gmblox/shirt/awesomeness.png")
 GMBlox.DeclarePants("Jeans", "gmblox/shirt/jeans.png")
 GMBlox.DeclarePants("Grey Wizard Robes", "gmblox/shirt/grey_wizard_robes.png")
 GMBlox.DeclarePants("Toxic Pants", "gmblox/shirt/toxicpants.png")
+GMBlox.DeclarePants("Mad Murderer Pants", "gmblox/shirt/mad_murderer_pants.png")
+GMBlox.DeclarePants("Telamons Swim Trunks", "gmblox/shirt/telamons_swim_trunks.png")
+GMBlox.DeclarePants("Classic Wizard Robes", "gmblox/shirt/classic_wizard.png")
+GMBlox.DeclarePants("Golden Robe Of Pwnage", "gmblox/shirt/golden_robe.png")
+GMBlox.DeclarePants("Racing Pants", "gmblox/shirt/racing_helmet_pants.png")
+GMBlox.DeclarePants("Spaceman Pants", "gmblox/shirt/spaceman_pants.png")
+GMBlox.DeclarePants("Knight Pants", "gmblox/shirt/knight_pants.png")
+
+
+GMBlox.DeclareTShirt("Bloxxer", "gmblox/tshirt/bloxxer.png")
+GMBlox.DeclareTShirt("Suit", "gmblox/tshirt/suit.png")
+GMBlox.DeclareTShirt("Vest", "gmblox/tshirt/vest.png")
+GMBlox.DeclareTShirt("Got Root?", "gmblox/tshirt/root.png")
+GMBlox.DeclareTShirt("Lottery Ticket", "gmblox/tshirt/lottery.png")
+GMBlox.DeclareTShirt("Wrench", "gmblox/tshirt/wrench.png")
+GMBlox.DeclareTShirt("Pirate", "gmblox/tshirt/pirate.png")
+GMBlox.DeclareTShirt("Coyote", "gmblox/tshirt/coyote.png")
+GMBlox.DeclareTShirt("Im With Stupid", "gmblox/tshirt/im_with_stupid.png")
+GMBlox.DeclareTShirt("2006 Logo", "gmblox/tshirt/2006_logo.png")
+GMBlox.DeclareTShirt("OH NOES", "gmblox/tshirt/noes.png")
+
 
 -- declare og faces
 GMBlox.DeclareFace("normal", "gmblox/face/smile.png")
