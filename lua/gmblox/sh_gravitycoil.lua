@@ -34,7 +34,7 @@ end
 GEAR.svThinkCallback = function(ent)
 		local ephys = ent:GetPhysicsObject()
 		if ephys then
-			ephys:ApplyForceCenter(Vector(0, 0, ephys:GetMass() * -8))
+			ephys:ApplyForceCenter(Vector(0, 0, ephys:GetMass() * -6))
 		end
 end
 
