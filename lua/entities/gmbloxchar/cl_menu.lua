@@ -16,20 +16,18 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 		surface.DrawRect(0, 0, w2, h2)
 
 		surface.SetDrawColor(cref.col.r, cref.col.g, cref.col.b)
-
+		surface.DrawRect(2, 2, w2 - 4, h2 - 4)
 		if cref.name == "head" then
 			if not self.matFaces then
 				self.matFaces = {}
 			end
 
 			if not self.matFaces[e_ref.ActiveFace] then
-				self.matFaces[e_ref.ActiveFace] = Material(e_ref.Faces[e_ref.ActiveFace].matui, "nocull ignorez alphatest")
+				self.matFaces[e_ref.ActiveFace] = Material(e_ref.Faces[e_ref.ActiveFace], "nocull ignorez")
 			end
-
+			surface.SetDrawColor(255, 255, 255, 255)
 			surface.SetMaterial(self.matFaces[e_ref.ActiveFace])
 			surface.DrawTexturedRect(2, 2, w2 - 4, h2 - 4)
-		else
-			surface.DrawRect(2, 2, w2 - 4, h2 - 4)
 		end
 	end
 
@@ -40,6 +38,27 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 	end
 end
 
+function ENT:MakeComboSelect(x, y, var, choices)
+	local cSelect = vgui.Create("DComboBox", self.customizeMenu)
+	cSelect:SetPos(x, y)
+	cSelect:SetSize(150, 20)
+	cSelect:SetValue(self[var])
+
+	for k, v in pairs(choices) do
+		cSelect:AddChoice(k)
+	end
+
+	local e_ref = self
+	function cSelect:OnSelect(index, value, data)
+		if not IsValid(e_ref) then
+			return
+		end
+		e_ref[var] = value
+	end
+	return cSelect
+end
+
+
 
 
 function ENT:MakeCustomizeMenu()
@@ -49,7 +68,7 @@ function ENT:MakeCustomizeMenu()
 	local e_ref = self
 
 	self.customizeMenu = vgui.Create("DFrame")
-	self.customizeMenu:SetSize(800, 600)
+	self.customizeMenu:SetSize(900, 700)
 	self.customizeMenu:Center()
 	self.customizeMenu:SetTitle("GMBlox Customization")
 	self.customizeMenu:SetDraggable(false)
@@ -66,7 +85,7 @@ function ENT:MakeCustomizeMenu()
 
 
 	local colMixer = vgui.Create("DColorMixer", self.customizeMenu)
-	colMixer:SetPos(800 - 400, 600 / 2 - 150)
+	colMixer:SetPos(900 - 400, 700 / 2 - 150)
 	colMixer:SetSize(400, 300)
 	colMixer:SetColor(e_ref.RenderObjects[e_ref.colEditTarget].col)
 
@@ -99,39 +118,16 @@ function ENT:MakeCustomizeMenu()
 
 
 
-	local comboSelectFace = vgui.Create("DComboBox", self.customizeMenu)
-	comboSelectFace:SetPos(offx + 200, offy + 100 - 10)
-	comboSelectFace:SetSize(100, 20)
-	comboSelectFace:SetValue(self.ActiveFace)
 
-	for k, v in pairs(self.Faces) do
-		comboSelectFace:AddChoice(k)
-	end
+	self:MakeComboSelect(offx + 200, offy + 100 - 10, "ActiveFace", GMBlox.ValidFaces)
+	local ctemp = self:MakeComboSelect(offx + 200, offy + 120 - 10, "ActiveHat", GMBlox.ValidHats)
+	ctemp:AddChoice("None")
 
-	function comboSelectFace:OnSelect(index, value, data)
-		if not IsValid(e_ref) then
-			return
-		end
-		e_ref.ActiveFace = value
-	end
+	ctemp = self:MakeComboSelect(offx + 300, offy + 220 - 10, "ActiveShirt", GMBlox.ValidShirts)
+	ctemp:AddChoice("none")
 
-
-	local comboSelectHat = vgui.Create("DComboBox", self.customizeMenu)
-	comboSelectHat:SetPos(offx + 200, offy + 120 - 10)
-	comboSelectHat:SetSize(100, 20)
-	comboSelectHat:SetValue(self.ActiveHat or "None")
-
-	for k, v in pairs(self.Hats) do
-		comboSelectHat:AddChoice(v.name)
-	end
-	comboSelectHat:AddChoice("None")
-
-	function comboSelectHat:OnSelect(index, value, data)
-		if not IsValid(e_ref) then
-			return
-		end
-		e_ref.ActiveHat = value
-	end
+	ctemp = self:MakeComboSelect(offx + 300, offy + 240 - 10, "ActivePants", GMBlox.ValidPants)
+	ctemp:AddChoice("none")
 
 	function self.customizeMenu:OnClose()
 		if not IsValid(e_ref) then
@@ -161,6 +157,8 @@ function ENT:MakeCustomizeMenu()
 		local proptbl = {
 			hat = e_ref.ActiveHat,
 			face = e_ref.ActiveFace,
+			shirt = e_ref.ActiveShirt,
+			pants = e_ref.ActivePants
 		}
 
 		cookie.Set("gmblox_col", util.TableToJSON(coltbl))

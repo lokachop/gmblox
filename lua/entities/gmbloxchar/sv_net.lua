@@ -72,11 +72,19 @@ net.Receive("gmblox_changehat", function(len, ply)
 	local hat = net.ReadString() or "None"
 	local face = net.ReadString() or "normal"
 
+	local sh_read = net.ReadString()
+	local shirt = GMBlox.ValidShirts[sh_read] ~= nil and sh_read or "none"
+
+	local pa_read = net.ReadString()
+	local pants = GMBlox.ValidPants[pa_read] ~= nil and pa_read or "none"
+
 
 	net.Start("gmblox_changehat_sv")
 		net.WriteEntity(target)
 		net.WriteString(hat)
 		net.WriteString(face)
+		net.WriteString(shirt)
+		net.WriteString(pants)
 	net.Broadcast()
 end)
 

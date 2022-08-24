@@ -7,6 +7,7 @@ AddCSLuaFile("cl_menu.lua")
 AddCSLuaFile("cl_net.lua")
 AddCSLuaFile("cl_shiftlock.lua")
 AddCSLuaFile("cl_loadout.lua")
+AddCSLuaFile("cl_shirts_n_pants.lua")
 
 include("shared.lua")
 include("sv_physics.lua")

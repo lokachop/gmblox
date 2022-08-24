@@ -31,9 +31,13 @@ function ENT:ReBuildGearButtons()
 		local c_mat = Material(gearData.icon, "nocull ignorez alphatest")
 		local e_self = self
 		function button:Paint(w, h)
+			if not IsValid(e_self) then
+				return
+			end
+
 			surface.SetDrawColor(64, 64, 64, 255)
 
-			if v == e_self:GetActiveGear() then
+			if IsValid(e_self:GetActiveGear()) and v == e_self:GetActiveGear() then
 				surface.SetDrawColor(255, 0, 0, 255)
 			end
 			surface.DrawRect(0, 0, w, h)

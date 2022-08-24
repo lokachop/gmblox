@@ -5,6 +5,7 @@ include("cl_menu.lua")
 include("cl_net.lua")
 include("cl_shiftlock.lua")
 include("cl_loadout.lua")
+include("cl_shirts_n_pants.lua")
 
 surface.CreateFont("GMBlox_Trebuchet18Bold", {
 	font = "Trebuchet MS",
@@ -59,7 +60,7 @@ function ENT:BuildCSModels()
 	for k, v in pairs(self.RenderObjects) do
 		self.CSModels[k] = ClientsideModel(v.model, RENDERGROUP_OPAQUE)
 		self.CSModels[k]:SetMaterial(v.mat)
-		if v.col then
+		if v.col and not self.HasRT then
 			self.CSModels[k]:SetColor(v.col)
 		end
 
@@ -98,6 +99,8 @@ function ENT:Initialize()
 
 	self.ActiveHat = "None"
 	self.ActiveFace = "normal"
+	self.ActiveShirt = "none"
+	self.ActivePants = "none"
 
 	self.RenderObjects = {
 		["head"] = {
@@ -120,7 +123,7 @@ function ENT:Initialize()
 		["leftarm"] = {
 			pos = Vector(-6, -18, 0),
 			ang = Angle(-90, 0, 0),
-			model = "models/gmblox/limbarm.mdl",
+			model = "models/gmblox/limbarm_left.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(255, 255, 0),
 			name = "leftarm"
@@ -128,7 +131,7 @@ function ENT:Initialize()
 		["rightarm"] = {
 			pos = Vector(-6, 18, 0),
 			ang = Angle(-90, 0, 0),
-			model = "models/gmblox/limbarm.mdl",
+			model = "models/gmblox/limbarm_right.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(255, 255, 0),
 			name = "rightarm"
@@ -137,7 +140,7 @@ function ENT:Initialize()
 		["leftleg"] = {
 			pos = Vector(12, 6, 0),
 			ang = Angle(-90, 0, 0),
-			model = "models/gmblox/limb.mdl",
+			model = "models/gmblox/limb_left.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(75, 220, 75),
 			name = "leftleg"
@@ -145,7 +148,7 @@ function ENT:Initialize()
 		["rightleg"] = {
 			pos = Vector(12, -6, 0),
 			ang = Angle(-90, 0, 0),
-			model = "models/gmblox/limb.mdl",
+			model = "models/gmblox/limb_right.mdl",
 			mat = "gmblox/robloxwhite",
 			col = Color(75, 220, 75),
 			name = "rightleg"
@@ -473,17 +476,24 @@ end
 
 
 function ENT:SetupOnControl()
-	if GetConVar("gmblox_loadoutprompt"):GetInt() == 0 then
-		self:LoadLoadoutFromName(GetConVar("gmblox_defaultloadout"):GetString())
+	if not IsValid(self:GetController()) then
+		return
 	end
+	self:SetupCosRTs()
 
 
+	if LocalPlayer() == self:GetController() then
+		if GetConVar("gmblox_loadoutprompt"):GetInt() == 0 then
+			self:LoadLoadoutFromName(GetConVar("gmblox_defaultloadout"):GetString())
+		end
 
-	self:MakeHooks()
-	self:ReBuildGearButtons()
-	self:SendSavedAppearance()
-	self:MakeMenuButton()
-	self:MakeShiftlockButton()
+		self:MakeHooks()
+		self:ReBuildGearButtons()
+		self:SendSavedAppearance()
+		self:MakeMenuButton()
+		self:MakeShiftlockButton()
+		self.MadeHooksClient = true
+	end
 end
 
 function ENT:Think()
@@ -506,7 +516,7 @@ function ENT:Think()
 	end
 
 
-	if not self.MadeHooks and IsValid(self:GetController()) and self:GetController() == LocalPlayer() then
+	if not self.MadeHooks and IsValid(self:GetController()) then
 		self:SetupOnControl()
 		self.MadeHooks = true
 	end
@@ -562,7 +572,7 @@ end)
 function ENT:OnRemove()
 	self:RemoveCSModels()
 
-	if self.MadeHooks then
+	if self.MadeHooksClient then
 		self:RemoveHooks()
 	end
 end

@@ -6,9 +6,8 @@
 
 
 GMBlox = GMBlox or {}
-GMBlox.ValidGears = {}
-GMBlox.ValidFaces = {}
-GMBlox.ValidHats = {}
+
+
 GMBlox.DefaultInventory = GMBlox.DefaultInventory or {
 	"rocketlauncher",
 	"superball",
@@ -33,6 +32,7 @@ GMBlox.RebuildIsAllowedLUT()
 
 
 -- creates a valid gear from a table
+GMBlox.ValidGears = {}
 function GMBlox.DeclareGear(tbl)
 	tbl.name = tbl.name or "Gear"
 	tbl.desc = tbl.desc or "No description"
@@ -55,13 +55,12 @@ function GMBlox.DeclareGear(tbl)
 	GMBlox.ValidGears[tbl.name] = tbl
 end
 
+GMBlox.ValidFaces = {}
 function GMBlox.DeclareFace(name, mat, mat_ui)
-	GMBlox.ValidFaces[name] = {
-		mat = mat,
-		matui = mat_ui
-	}
+	GMBlox.ValidFaces[name] = mat
 end
 
+GMBlox.ValidHats = {}
 function GMBlox.DeclareHat(name, model, posoff, angoff, scl)
 	GMBlox.ValidHats[name] = {
 		model = model,
@@ -72,23 +71,42 @@ function GMBlox.DeclareHat(name, model, posoff, angoff, scl)
 	}
 end
 
+GMBlox.ValidShirts = {}
+function GMBlox.DeclareShirt(name, mat)
+	GMBlox.ValidShirts[name] = mat
+end
 
+GMBlox.ValidPants = {}
+function GMBlox.DeclarePants(name, mat)
+	GMBlox.ValidPants[name] = mat
+end
+
+GMBlox.DeclareShirt("Battle Shirt of Awesomeness", "gmblox/shirt/awesomeness.png")
+GMBlox.DeclareShirt("Stanford Shirt", "gmblox/shirt/stanford.png")
+GMBlox.DeclareShirt("White Plaid Shirt", "gmblox/shirt/whiteplaid.png")
+GMBlox.DeclareShirt("I <3 Chicken", "gmblox/shirt/chickenshirt.png")
+GMBlox.DeclareShirt("Epic Shirt", "gmblox/shirt/epic_shirt.png")
+
+GMBlox.DeclarePants("Battle Pants of Awesomeness", "gmblox/shirt/awesomeness.png")
+GMBlox.DeclarePants("Jeans", "gmblox/shirt/jeans.png")
+GMBlox.DeclarePants("Grey Wizard Robes", "gmblox/shirt/grey_wizard_robes.png")
+GMBlox.DeclarePants("Toxic Pants", "gmblox/shirt/toxicpants.png")
 
 -- declare og faces
-GMBlox.DeclareFace("normal", "gmblox/face_background", "gmblox/vgui/smile-background.png")
-GMBlox.DeclareFace(":3", "gmblox/colonthreebackground", "gmblox/vgui/colonthree-background.png")
-GMBlox.DeclareFace("drool", "gmblox/face_drool", "gmblox/vgui/face_drool.png")
-GMBlox.DeclareFace("manface", "gmblox/face_man", "gmblox/vgui/face_man.png")
-GMBlox.DeclareFace("palface", "gmblox/face_pal", "gmblox/vgui/face_pal.png")
-GMBlox.DeclareFace("stare", "gmblox/face_stare", "gmblox/vgui/face_stare.png")
+GMBlox.DeclareFace("normal", "gmblox/face/smile.png")
+GMBlox.DeclareFace(":3", "gmblox/face/colonthree.png")
+GMBlox.DeclareFace("drool", "gmblox/face/drool.png")
+GMBlox.DeclareFace("manface", "gmblox/face/man.png")
+GMBlox.DeclareFace("palface", "gmblox/face/pal.png")
+GMBlox.DeclareFace("stare", "gmblox/face/stare.png")
 
 -- new update, new faces :D
-GMBlox.DeclareFace(":D", "gmblox/face_d", "gmblox/vgui/face_d.png")
-GMBlox.DeclareFace("sad", "gmblox/face_sad", "gmblox/vgui/face_sad.png")
-GMBlox.DeclareFace("retro smiley", "gmblox/face_retrosmiley", "gmblox/vgui/face_retrosmiley.png")
-GMBlox.DeclareFace("XD", "gmblox/face_xd", "gmblox/vgui/face_xd.png")
-GMBlox.DeclareFace("fearless", "gmblox/face_fearless", "gmblox/vgui/face_fearless.png")
-GMBlox.DeclareFace("finn mccool", "gmblox/face_finn", "gmblox/vgui/face_finn.png")
+GMBlox.DeclareFace(":D", "gmblox/face/d.png")
+GMBlox.DeclareFace("sad", "gmblox/face/sad.png")
+GMBlox.DeclareFace("retro smiley", "gmblox/face/retrosmiley.png")
+GMBlox.DeclareFace("XD", "gmblox/face/xd.png")
+GMBlox.DeclareFace("fearless", "gmblox/face/fearless.png")
+GMBlox.DeclareFace("finn mccool", "gmblox/face/finn.png")
 
 
 GMBlox.DeclareHat("HL2 Lamp Shade", "models/props_c17/lampShade001a.mdl", Vector(-3, 0, 0), Angle(0, 0, 0))

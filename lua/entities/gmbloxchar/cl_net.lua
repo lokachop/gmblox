@@ -28,7 +28,8 @@ net.Receive("gmblox_changecolour_sv",  function()
 	ro["leftarm"].col = coleftarm
 	ro["rightarm"].col = colrightarm
 
-	target:BuildCSModels()
+	--target:BuildCSModels()
+	target:RePaintRT()
 end)
 
 net.Receive("gmblox_changehat_sv", function()
@@ -36,6 +37,9 @@ net.Receive("gmblox_changehat_sv", function()
 
 	local hat = net.ReadString()
 	local face = net.ReadString()
+
+	local shirt = net.ReadString()
+	local pants = net.ReadString()
 
 
 	local ro = target.RenderObjects
@@ -48,10 +52,14 @@ net.Receive("gmblox_changehat_sv", function()
 	end
 
 	target.ActiveFace = face or "normal"
-	ro["head"].mat = target.Faces[face].mat
+	--ro["head"].mat = target.Faces[face].mat
 	target.ActiveHat = hat or "None"
 
+	target.ActiveShirt = GMBlox.ValidShirts[shirt] ~= nil and shirt or "none"
+	target.ActivePants = GMBlox.ValidPants[pants] ~= nil and pants or "none"
+
 	target:BuildCSModels()
+	target:RePaintRT()
 end)
 
 
@@ -103,7 +111,9 @@ function ENT:SendSavedAppearance()
 
 	net.Start("gmblox_changehat")
 		net.WriteEntity(self)
-		net.WriteString(prop.hat)
-		net.WriteString(prop.face)
+		net.WriteString(prop.hat or "None")
+		net.WriteString(prop.face or "normal")
+		net.WriteString(prop.shirt or "none")
+		net.WriteString(prop.pants or "none")
 	net.SendToServer()
 end
