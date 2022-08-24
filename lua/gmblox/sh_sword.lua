@@ -161,6 +161,7 @@ GEAR.svDoubleFire = function(ent)
 
 	ent.SwordHBPos = Vector(0, 0, 16)
 	ent.SwordHBSize = 16
+	ent.GravityMult = 0
 end
 
 GEAR.svDoubleFireFinished = function(ent)
@@ -177,6 +178,7 @@ GEAR.svDoubleFireFinished = function(ent)
 	ent.NextSwordLunge = CurTime() + 1.5
 	ent.SwordHBPos = nil
 	ent.SwordHBSize = nil
+	ent.GravityMult = 1
 end
 
 
@@ -188,6 +190,7 @@ GEAR.svUnequip = function(ent)
 
 	ent.SwordHBPos = nil
 	ent.SwordHBSize = nil
+	ent.GravityMult = 1
 end
 
 GEAR.svEquip = function(ent)

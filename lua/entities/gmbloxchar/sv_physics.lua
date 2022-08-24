@@ -65,6 +65,9 @@ function ENT:Stand(filter)
 	if not IsValid(phys) then
 		return
 	end
+	phys:ApplyForceCenter(Vector(0, 0, phys:GetMass() * -16) * self.GravityMult)
+
+
 
 	if not IsValid(self:GetController()) then
 		-- lets slow down only if no one is controlling
@@ -209,7 +212,7 @@ function ENT:PlayerHandleMovement(tr)
 
 
 	if self.HasJumped and self:GetGrounded() then
-		self.NextJump = CurTime() + 0.1
+		self.NextJump = CurTime() + 0.0
 		self.HasJumped = false
 	end
 
@@ -226,8 +229,8 @@ function ENT:PlayerHandleMovement(tr)
 		end
 
 
-		phys:ApplyForceCenter(Vector(0, 0, 132000 * self.JumpPowerMult))
-		self.NextJump = CurTime() + 0.25
+		phys:ApplyForceCenter(Vector(0, 0, 182000 * self.JumpPowerMult))
+		self.NextJump = CurTime() + 0.15
 		self.HasJumped = true
 		self:EmitSound("gmblox/jump.wav")
 	end

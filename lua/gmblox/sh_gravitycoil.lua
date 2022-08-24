@@ -19,6 +19,7 @@ GEAR.svEquip = function(ent)
 	if ephys:IsValid() then
 		ephys:EnableGravity(false)
 	end
+	ent.GravityMult = 0
 end
 
 GEAR.svUnequip = function(ent)
@@ -27,12 +28,13 @@ GEAR.svUnequip = function(ent)
 	if ephys:IsValid() then
 		ephys:EnableGravity(true)
 	end
+	ent.GravityMult = 1
 end
 
 GEAR.svThinkCallback = function(ent)
 		local ephys = ent:GetPhysicsObject()
 		if ephys then
-			ephys:ApplyForceCenter(Vector(0, 0, -ephys:GetMass() * 4))
+			ephys:ApplyForceCenter(Vector(0, 0, ephys:GetMass() * -8))
 		end
 end
 

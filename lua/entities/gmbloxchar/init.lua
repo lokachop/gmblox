@@ -88,6 +88,7 @@ function ENT:Initialize()
 	self.InternZoom = 1
 	self.WalkSpeedMult = 1
 	self.JumpPowerMult = 1
+	self.GravityMult = 1
 
 	self:SetHealthRoblox(100)
 
