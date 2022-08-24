@@ -122,7 +122,7 @@ net.Receive("gmblox_exit", function(len, ply)
 
 	net.Start("gmblox_exit_sv")
 		net.WriteEntity(target)
-	net.Send(ply)
+	net.Broadcast()
 end)
 
 net.Receive("gmblox_changecolour", function(len, ply)

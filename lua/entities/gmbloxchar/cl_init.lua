@@ -493,8 +493,9 @@ function ENT:SetupOnControl()
 		self:SendSavedAppearance()
 		self:MakeMenuButton()
 		self:MakeShiftlockButton()
-		self.MadeHooksClient = true
+		self.MadeHooksCl = true
 	end
+	self.MadeHooks = true
 end
 
 function ENT:Think()
@@ -548,15 +549,18 @@ end
 
 
 function ENT:RemoveHooks()
-	hook.Remove("CalcView", "GMBloxControl")
-	hook.Remove("HUDPaint", "GMBloxPaintHealth")
-	hook.Remove("CreateMove", "GMBloxZoom")
+	if self.MadeHooksCl then
+		hook.Remove("CalcView", "GMBloxControl")
+		hook.Remove("HUDPaint", "GMBloxPaintHealth")
+		hook.Remove("CreateMove", "GMBloxZoom")
 
-	for k, v in pairs(self.ActiveButtons) do
-		v:Remove()
+		for k, v in pairs(self.ActiveButtons) do
+			v:Remove()
+		end
+		gui.EnableScreenClicker(false)
+		self.MadeHooksCl = false
 	end
 
-	gui.EnableScreenClicker(false)
 	self.MadeHooks = false
 end
 
@@ -573,7 +577,7 @@ end)
 function ENT:OnRemove()
 	self:RemoveCSModels()
 
-	if self.MadeHooksClient then
+	if self.MadeHooks then
 		self:RemoveHooks()
 	end
 end

@@ -10,25 +10,25 @@ local uvPartLUT = {
 		h = 128
 	},
 	["leftarm"] = {
-		x = 308,
+		x = 217,
 		y = 355,
 		w = 64,
 		h = 128
 	},
 	["rightarm"] = {
-		x = 217,
-		y = 355,
-		w = 64,
-		h = 128
-	},
-	["leftleg"] = {
 		x = 308,
 		y = 355,
 		w = 64,
 		h = 128
 	},
-	["rightleg"] = {
+	["leftleg"] = {
 		x = 217,
+		y = 355,
+		w = 64,
+		h = 128
+	},
+	["rightleg"] = {
+		x = 308,
 		y = 355,
 		w = 64,
 		h = 128
@@ -83,27 +83,21 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 				return
 			end
 
-			if e_ref.ActivePants == "none" then
-				return
+			if e_ref.ActivePants ~= "none" and GMBlox.ValidPants[e_ref.ActivePants] ~= nil then
+				local mat = Material(GMBlox.ValidPants[e_ref.ActivePants], "ignorez nocull smooth")
+				local szRatW = mat:Width() / 585
+				local szRatH = mat:Height() / 559
+
+				local u0 = (uvDat.x * szRatW) / (585 * szRatW)
+				local v0 = (uvDat.y * szRatH) / (559 * szRatH)
+
+				local u1 = ((uvDat.x + uvDat.w) * szRatW) / (585 * szRatW)
+				local v1 = ((uvDat.y + uvDat.h) * szRatH) / (559 * szRatH)
+
+				surface.SetDrawColor(255, 255, 255, 255)
+				surface.SetMaterial(mat)
+				surface.DrawTexturedRectUV(2, 2, w2 - 4, h2 - 4, u0, v0, u1, v1)
 			end
-
-			if GMBlox.ValidPants[e_ref.ActivePants] == nil then
-				return
-			end
-
-			local mat = Material(GMBlox.ValidPants[e_ref.ActivePants], "ignorez nocull smooth")
-			local szRatW = mat:Width() / 585
-			local szRatH = mat:Height() / 559
-
-			local u0 = (uvDat.x * szRatW) / (585 * szRatW)
-			local v0 = (uvDat.y * szRatH) / (559 * szRatH)
-
-			local u1 = ((uvDat.x + uvDat.w) * szRatW) / (585 * szRatW)
-			local v1 = ((uvDat.y + uvDat.h) * szRatH) / (559 * szRatH)
-
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.SetMaterial(mat)
-			surface.DrawTexturedRectUV(2, 2, w2 - 4, h2 - 4, u0, v0, u1, v1)
 		end
 
 		if applyLUTShirt[cref.name] then
@@ -112,27 +106,21 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 				return
 			end
 
-			if e_ref.ActiveShirt == "none" then
-				return
+			if e_ref.ActiveShirt ~= "none" and GMBlox.ValidShirts[e_ref.ActiveShirt] ~= nil then
+				local mat = Material(GMBlox.ValidShirts[e_ref.ActiveShirt], "ignorez nocull smooth")
+				local szRatW = mat:Width() / 585
+				local szRatH = mat:Height() / 559
+
+				local u0 = (uvDat.x * szRatW) / (585 * szRatW)
+				local v0 = (uvDat.y * szRatH) / (559 * szRatH)
+
+				local u1 = ((uvDat.x + uvDat.w) * szRatW) / (585 * szRatW)
+				local v1 = ((uvDat.y + uvDat.h) * szRatH) / (559 * szRatH)
+
+				surface.SetDrawColor(255, 255, 255, 255)
+				surface.SetMaterial(mat)
+				surface.DrawTexturedRectUV(2, 2, w2 - 4, h2 - 4, u0, v0, u1, v1)
 			end
-
-			if GMBlox.ValidShirts[e_ref.ActiveShirt] == nil then
-				return
-			end
-
-			local mat = Material(GMBlox.ValidShirts[e_ref.ActiveShirt], "ignorez nocull smooth")
-			local szRatW = mat:Width() / 585
-			local szRatH = mat:Height() / 559
-
-			local u0 = (uvDat.x * szRatW) / (585 * szRatW)
-			local v0 = (uvDat.y * szRatH) / (559 * szRatH)
-
-			local u1 = ((uvDat.x + uvDat.w) * szRatW) / (585 * szRatW)
-			local v1 = ((uvDat.y + uvDat.h) * szRatH) / (559 * szRatH)
-
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.SetMaterial(mat)
-			surface.DrawTexturedRectUV(2, 2, w2 - 4, h2 - 4, u0, v0, u1, v1)
 		end
 
 
@@ -188,7 +176,7 @@ function ENT:MakeCustomizeMenu()
 	local e_ref = self
 
 	self.customizeMenu = vgui.Create("DFrame")
-	self.customizeMenu:SetSize(900, 700)
+	self.customizeMenu:SetSize(900, 600)
 	self.customizeMenu:Center()
 	self.customizeMenu:SetTitle("GMBlox Customization")
 	self.customizeMenu:SetDraggable(false)
@@ -205,7 +193,7 @@ function ENT:MakeCustomizeMenu()
 
 
 	local colMixer = vgui.Create("DColorMixer", self.customizeMenu)
-	colMixer:SetPos(900 - 400, 700 / 2 - 150)
+	colMixer:SetPos(900 - 400, 600 / 2 - 150)
 	colMixer:SetSize(400, 300)
 	colMixer:SetColor(e_ref.RenderObjects[e_ref.colEditTarget].col)
 

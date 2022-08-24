@@ -38,6 +38,7 @@ function ENT:UnControl()
 
 	self:GetController():UnSpectate()
 	self:GetController():AllowFlashlight(true)
+	self:GetController().HasGMBlox = false
 
 	local found = false
 	if IsValid(self:GetController()) then
@@ -188,6 +189,10 @@ end
 
 
 function ENT:BeginControl(ply)
+	if ply.HasGMBlox then
+		return
+	end
+
 	if IsValid(self:GetController()) then
 		return
 	end
@@ -205,6 +210,7 @@ function ENT:BeginControl(ply)
 
 	ply:RemoveFlags(FL_NOTARGET)
 	ply:RemoveFlags(FL_AIMTARGET)
+	ply.HasGMBlox = true
 end
 
 function ENT:Use(ply, caller)
