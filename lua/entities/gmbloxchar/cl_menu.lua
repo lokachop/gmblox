@@ -123,7 +123,6 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 			local mat = Material(GMBlox.ValidShirts[e_ref.ActiveShirt], "ignorez nocull smooth")
 			local szRatW = mat:Width() / 585
 			local szRatH = mat:Height() / 559
-			print(szRatW, szRatH)
 
 			local u0 = (uvDat.x * szRatW) / (585 * szRatW)
 			local v0 = (uvDat.y * szRatH) / (559 * szRatH)
