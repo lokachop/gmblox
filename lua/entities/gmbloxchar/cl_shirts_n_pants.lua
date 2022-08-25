@@ -102,6 +102,10 @@ local roPos = {
 local function render_rt_ez(rt, call)
 	local oW, oH = ScrW(), ScrH()
 
+	if not rt then
+		return
+	end
+
 	render.SetViewPort(0, 0, rt:GetMappingWidth(), rt:GetMappingHeight())
 		cam.Start2D()
 		render.PushRenderTarget(rt)

@@ -55,6 +55,11 @@ function ENT:BodyPartButton(x, y, w, h, cref, colmixer)
 
 	local e_ref = self
 	function buttonpart:Paint(w2, h2)
+		if not IsValid(e_ref) then
+			return
+		end
+
+
 		local opt = e_ref.colEditTarget == cref.name and 0 or 255
 		surface.SetDrawColor(255, opt, opt)
 		surface.DrawRect(0, 0, w2, h2)
