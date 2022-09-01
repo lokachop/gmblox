@@ -260,6 +260,11 @@ end
 
 
 function ENT:LoadLoadoutFromName(name)
+	if name == "none" then
+		self.Inventory = {}
+		return
+	end
+
 	if not file.Exists("gmblox/gearpresets/" .. name .. ".txt", "DATA") then
 		return
 	end

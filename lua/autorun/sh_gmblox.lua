@@ -154,7 +154,7 @@ GMBlox.DeclareHat("Astronaut Helmet", "models/roblox_assets/astronaut_helmet.mdl
 GMBlox.DeclareHat("BC Hardhat", "models/roblox_assets/builders_club_hard_hat.mdl", Vector(-2.75, 0, 1), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 GMBlox.DeclareHat("Doge", "models/roblox_assets/doge.mdl", Vector(5, 0, 3), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 GMBlox.DeclareHat("Bloxxer Cap", "models/roblox_assets/bloxxer_cap.mdl", Vector(1, 0, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
-GMBlox.DeclareHat("Kitty Ears", "models/roblox_assets/kitty_ears.mdl", Vector(-2, 0, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
+GMBlox.DeclareHat("Kitty Ears", "models/roblox_assets/kitty_ears.mdl", Vector(-2, 0.25, 0), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 GMBlox.DeclareHat("Shaggy", "models/roblox_assets/shaggy.mdl", Vector(3.25, -1, -1), Angle(0, 0, 180), Vector(1.25, 1.25, 1.25))
 
 -- lets load all the gears now
