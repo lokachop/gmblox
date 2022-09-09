@@ -92,6 +92,10 @@ function ENT:RenderScoreboard()
 
 	local curr_y = sh + sh * 0.95
 	for k, v in pairs(team.GetAllTeams()) do
+		if #team.GetPlayers(k) == 0 then
+			continue
+		end
+
 		surface.SetDrawColor(v.Color.r, v.Color.g, v.Color.b, 96)
 		surface.DrawRect(ScrW() - sw * 1.05, curr_y, sw, 24)
 
