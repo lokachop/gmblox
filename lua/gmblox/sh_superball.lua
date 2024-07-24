@@ -30,6 +30,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 		bounceBall:Remove()
 		return
 	end
+	bounceBall_phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 	bounceBall_phys:SetMass(250)
 	bounceBall_phys:Wake()
 	bounceBall_phys:ApplyForceCenter(shootdir * (-1024 * 350))

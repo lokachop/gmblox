@@ -36,6 +36,7 @@ GEAR.svCallback = function(ent, hitpos, shootpos, shootdir)
 		rocketProp:Remove()
 		return
 	end
+	rocketPhys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 	rocketPhys:SetMass(500)
 	rocketPhys:EnableGravity(false)
 	rocketPhys:ApplyForceCenter(-shootdir * (1280 * 200))
