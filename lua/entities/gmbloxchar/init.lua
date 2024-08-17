@@ -101,6 +101,7 @@ function ENT:Initialize()
 	self:AddEFlags(EFL_DONTBLOCKLOS)
 
 	self:SetUseType(SIMPLE_USE)
+	self:SetLagCompensated(true)
 end
 
 function ENT:SpawnFunction(ply, tr, classname)
