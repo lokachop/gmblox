@@ -366,13 +366,11 @@ function ENT:MakeCreditsMenu()
 	makeCreditAndReason(self.creditsMenu, "Lord_Arcness", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198118355002")
 	makeCreditAndReason(self.creditsMenu, "MISTER BONES", "Bugtesting, awesome friend", "https://steamcommunity.com/profiles/76561198056452663")
 	makeCreditAndReason(self.creditsMenu, "Hybird", "Help with sounds, textures, gears and fixes", "https://steamcommunity.com/profiles/76561199160976480")
-	makeCreditAndReason(self.creditsMenu, "ToxicOrSomething", "Bugtesting, models and textures", "https://steamcommunity.com/profiles/76561198048575789")
+	makeCreditAndReason(self.creditsMenu, "spooner", "Bugtesting, models and textures", "https://steamcommunity.com/profiles/76561198048575789")
 	makeCreditAndReason(self.creditsMenu, "zynx", "Bugfixes, feedback", "https://steamcommunity.com/profiles/76561198116304797")
 	makeCreditAndReason(self.creditsMenu, "ROBLOX", "Original Game", "https://www.roblox.com/")
 	makeCreditAndReason(self.creditsMenu, "GMPublisher", "Used for publishing to the workshop", "https://github.com/WilliamVenner/gmpublisher")
 	makeCreditAndReason(self.creditsMenu, "Rbx2Source", "Used to convert roblox assets to source", "https://github.com/MaximumADHD/Rbx2Source")
-
-	--https://steamcommunity.com/id/you_suck_balls/
 
 	-- and most importantly
 	makeCreditAndReason(self.creditsMenu, LocalPlayer():GetName(), "Downloading and using the addon", "https://steamcommunity.com/profiles/" .. LocalPlayer():SteamID64())
